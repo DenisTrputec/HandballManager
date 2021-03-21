@@ -21,7 +21,7 @@ class Person:
 
 
 if __name__ == "__main__":
-    nat = Nation("Croatia", "Croatian")
+    nat = Nation(1, "Croatia", "Croatian")
     person_list = [Person(1, "D.Trputec", 28, 3, nat, "Zagreb", None, None),
                    Person(2, "K.Trputec", 23, 2, nat, "Dinamo", None, None)]
     for p in person_list:

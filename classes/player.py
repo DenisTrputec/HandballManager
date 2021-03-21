@@ -32,7 +32,7 @@ class Player(Person):
 
 
 if __name__ == "__main__":
-    nat = Nation("Croatia", "Croatian")
+    nat = Nation(1, "Croatia", "Croatian")
     player_list = [Player(1, "D.Trputec", 28, Position.CB, 3, 2, 3, nat, "Zagreb", None, None, 1),
                    Player(2, "K.Trputec", 23, Position.LB, 4, 1, 2, nat, "Dinamo", None, None, 0)]
     for p in player_list:

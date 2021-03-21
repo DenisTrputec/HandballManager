@@ -1,6 +1,3 @@
-from classes.nation import Nation
-
-
 class Person:
     def __init__(self, person_id, name, age, loyalty, nation, club, contract, cost):
         self.__id = person_id
@@ -17,12 +14,4 @@ class Person:
 
     def __str__(self):
         return f"Name: {self.name}, Age: {self.age}, Loyalty: {self.loyalty}, Nationality: {self.nation.nationality}," \
-               f" Club: {self.club}, Contract: {self.contract}, Cost: {self.cost}"
-
-
-if __name__ == "__main__":
-    nat = Nation(1, "Croatia", "Croatian")
-    person_list = [Person(1, "D.Trputec", 28, 3, nat, "Zagreb", None, None),
-                   Person(2, "K.Trputec", 23, 2, nat, "Dinamo", None, None)]
-    for p in person_list:
-        print(p)
+               f" Club: {self.club.name}, Contract: {self.contract}, Cost: {self.cost}"

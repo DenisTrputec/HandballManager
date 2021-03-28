@@ -13,18 +13,18 @@ class Position(Enum):
 
 
 class Player(Person):
-    def __init__(self, person_id, name, age, position, attack, defense, loyalty, nation, club, contract, cost,
-                 injury):
-        super().__init__(person_id, name, age, loyalty, nation, club, contract, cost)
+    def __init__(self, person_id, name, age, position, attack, defense, loyalty, country, club, contract_length, salary,
+                 injury_length):
+        super().__init__(person_id, name, age, loyalty, country, club, contract_length, salary)
         self.position = position
         self.attack = attack
         self.defense = defense
-        self.injury = injury
+        self.injury_length = injury_length
 
     def __repr__(self):
         return f"<Player(Person)> id: {self.__id}"
 
     def __str__(self):
         return f"Name: {self.name}, Age: {self.age}, Position: {self.position.name}, Attack: {self.attack}, " \
-               f"Defense: {self.defense}, Loyalty: {self.loyalty}, Nationality: {self.nation.nationality}, Club: " \
-               f"{self.club.name}, Contract: {self.contract}, Cost: {self.cost}, Injury: {self.injury}"
+               f"Defense: {self.defense}, Loyalty: {self.loyalty}, Nationality: {self.country.nationality}, Club: " \
+               f"{self.club.name}, Contract: {self.contract_length}, Cost: {self.salary}, Injury: {self.injury_length}"

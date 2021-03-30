@@ -9,5 +9,4 @@ from classes import database
 if __name__ == "__main__":
     game = Game()
     game.load_game("denis")
-    for c in game.clubs:
-        print(c)
+    game.save_game()

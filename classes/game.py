@@ -15,14 +15,19 @@ class Game:
 
     def new_game(self, save_name):
         if os.path.exists("save/" + save_name + ".db"):
-            return False
+            return "Save file with that name already exists!"
 
         self.name = save_name
         self.season = 1
         self.week = 1
         shutil.copy2("database/default.db", "save/" + save_name + ".db")
-        return True
+
+    def save_game(self):
+        db.save_game(self)
 
     def load_game(self, save_name):
+        if not os.path.exists("save/" + save_name + ".db"):
+            return "Save file with that name doesn't exists!"
+
         self.name = save_name
         db.load_game(self)

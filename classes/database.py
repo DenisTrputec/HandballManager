@@ -1,35 +1,31 @@
 import sqlite3
-import os
 from classes.country import Country
 from classes.league import League
 from classes.club import Club
 from classes.player import Player
 
 
-def create_new_database(db_name):
-    db_name = 'save/' + db_name + '.db'
-    if os.path.exists(db_name):
-        os.remove(db_name)
+def save_game(game):
+    db_name = 'save/' + game.name + '.db'
 
     connection = sqlite3.connect(db_name)
     cursor = connection.cursor()
 
-    cursor.execute("""CREATE TABLE nation
-                    (id INTEGER PRIMARY KEY NOT NULL
-                    ,name TEXT NOT NULL UNIQUE
-                    ,nationality TEXT NOT NULL)
-                    """)
+    for club in game.clubs:
+        cursor.execute("UPDATE club"
+                       " SET league_id=" + str(club.league.get_id()) + ", money=" + str(club.money) +
+                       " WHERE team_id = " + str(club.get_id()))
 
-    # cursor.execute("""CREATE TABLE person
-    #                 (id INTEGER PRIMARY KEY NOT NULL
-    #                 ,name TEXT NOT NULL UNIQUE
-    #                 ,age INTEGER NOT NULL
-    #                 ,loyalty INTEGER NOT NULL
-    #                 ,nation_id INTEGER NOT NULL
-    #                 ,club_id INTEGER
-    #                 ,contract INTEGER
-    #                 ,cost INTEGER)
-    #                 """)
+    for player in game.players:
+        cursor.execute("UPDATE person"
+                       " SET age=" + str(player.age) + ", loyalty=" + str(player.loyalty) +
+                       ", country_id=" + str(player.country.get_id()) + ", club_id=" + str(player.club.get_id()) +
+                       ", contract_length=" + str(player.contract_length) + ", salary=" + str(player.salary) +
+                       " WHERE id = " + str(player.get_id()))
+        cursor.execute("UPDATE player"
+                       " SET attack=" + str(player.attack) + ", defense=" + str(player.defense) +
+                       ", injury_length=" + str(player.injury_length) +
+                       " WHERE person_id = " + str(player.get_id()))
 
     connection.commit()
     connection.close()

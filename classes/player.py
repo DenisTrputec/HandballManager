@@ -16,7 +16,7 @@ class Player(Person):
     def __init__(self, person_id, name, age, position, attack, defense, loyalty, country, club, contract_length, salary,
                  injury_length):
         super().__init__(person_id, name, age, loyalty, country, club, contract_length, salary)
-        self.position = position
+        self.position = Position(position)
         self.attack = attack
         self.defense = defense
         self.injury_length = injury_length

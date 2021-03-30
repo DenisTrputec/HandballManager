@@ -10,3 +10,6 @@ class Competition:
 
     def __str__(self):
         return f"Name: {self.name}, Nation: {self.country.name}"
+
+    def get_id(self):
+        return self.__id

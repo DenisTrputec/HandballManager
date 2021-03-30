@@ -15,3 +15,6 @@ class Person:
     def __str__(self):
         return f"Name: {self.name}, Age: {self.age}, Loyalty: {self.loyalty}, Nationality: {self.country.nationality}," \
                f" Club: {self.club.name}, Contract: {self.contract_length}, Cost: {self.salary}"
+
+    def get_id(self):
+        return self.__id

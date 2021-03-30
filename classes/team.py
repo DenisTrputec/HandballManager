@@ -10,3 +10,6 @@ class Team:
 
     def __str__(self):
         return f"Name: {self.name}, Nation: {self.country.name}, Number of players: {len(self.players)}"
+
+    def get_id(self):
+        return self.__id

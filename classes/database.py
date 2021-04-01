@@ -1,3 +1,4 @@
+import random
 import sqlite3
 from classes.country import Country
 from classes.league import League
@@ -80,3 +81,71 @@ def load_game(game):
     connection.commit()
     connection.close()
 
+
+# def new_players():
+#     db_name = 'D:\Programiranje\Moje aplikacije\Python\HandballManager\database\default.db'
+#     connection = sqlite3.connect(db_name)
+#     cursor = connection.cursor()
+#     cursor.execute("SELECT * FROM person_name WHERE country_id = 1 and type LIKE 'last'")
+#     last_names = cursor.fetchall()
+#     cursor.execute("SELECT * FROM person_name WHERE country_id = 1 and type LIKE 'first'")
+#     first_names = cursor.fetchall()
+#
+#     first_names = first_names[0][1]
+#     last_names = [name[1] for name in last_names]
+#
+#     pid = 0
+#     names = []
+#     for pos in range(1, 8):
+#         for i in range(1, 33):
+#             pid += 1
+#             player_name = None
+#             temp = False
+#             while not temp:
+#                 player_name = random.choice(first_names) + '.' + random.choice(last_names)
+#                 if player_name not in names:
+#                     names.append(player_name)
+#                     temp = True
+#             age = random.randint(18, 36)
+#             loyalty = random.randint(1, 5)
+#             country_id = 1
+#             club = None
+#             contract = random.randint(1, 3)
+#             salary = None
+#
+#             attack = random.randint(1, 100) if pos != 1 else 0
+#             if attack == 100:
+#                 attack = 5
+#             elif attack > 90:
+#                 attack = 4
+#             elif attack > 65:
+#                 attack = 3
+#             elif attack > 33:
+#                 attack = 2
+#             else:
+#                 attack = 1
+#             defense = random.randint(1, 100)
+#             if defense == 100:
+#                 defense = 5
+#             elif defense > 90:
+#                 defense = 4
+#             elif defense > 65:
+#                 defense = 3
+#             elif defense > 33:
+#                 defense = 2
+#             else:
+#                 defense = 1
+#
+#             injury = 0
+#             inj = random.randint(1, 10)
+#             while inj == 1:
+#                 injury += 1
+#                 inj = random.randint(1, 2)
+#
+#             salary = random.randint(attack + defense - 1, attack + defense + 1)
+#
+#             cursor.execute("INSERT INTO person (id, name, age, loyalty, country_id, contract_length, salary) VALUES (?, ?, ?, ?, ?, ?, ?)", (pid, player_name, age, loyalty, country_id, contract, salary))
+#             cursor.execute("INSERT INTO player (person_id, position_id, attack, defense, injury_length) VALUES (?, ?, ?, ?, ?)", (pid, pos, attack, defense, injury))
+#
+#     connection.commit()
+#     connection.close()

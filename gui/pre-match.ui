@@ -183,7 +183,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Attack Tactics</string>
+    <string>Attack Tactic</string>
    </property>
   </widget>
   <widget class="QPushButton" name="btnStartMatch">
@@ -269,7 +269,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Defense Tactics</string>
+    <string>Defense Tactic</string>
    </property>
   </widget>
   <widget class="QComboBox" name="cbDefLb">

@@ -40,10 +40,6 @@ class MainWindow(baseMainWindow, formMainWindow):
         self.child_window.show()
         self.hide()
 
-    def on_close(self):
-        print(1)
-        super().show()
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

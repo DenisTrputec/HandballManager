@@ -98,6 +98,112 @@
     </property>
    </column>
   </widget>
+  <widget class="QComboBox" name="cbAtkGk">
+   <property name="geometry">
+    <rect>
+     <x>1070</x>
+     <y>350</y>
+     <width>180</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="cbAtkCb">
+   <property name="geometry">
+    <rect>
+     <x>1070</x>
+     <y>300</y>
+     <width>180</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="cbAtkLb">
+   <property name="geometry">
+    <rect>
+     <x>850</x>
+     <y>290</y>
+     <width>180</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="cbAtkRb">
+   <property name="geometry">
+    <rect>
+     <x>1290</x>
+     <y>290</y>
+     <width>180</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="cbAtkLw">
+   <property name="geometry">
+    <rect>
+     <x>790</x>
+     <y>220</y>
+     <width>180</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="cbAtkRw">
+   <property name="geometry">
+    <rect>
+     <x>1350</x>
+     <y>220</y>
+     <width>180</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="cbAtkP">
+   <property name="geometry">
+    <rect>
+     <x>1070</x>
+     <y>250</y>
+     <width>180</width>
+     <height>30</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLabel" name="lblAttack">
+   <property name="geometry">
+    <rect>
+     <x>790</x>
+     <y>150</y>
+     <width>151</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Attack Tactics</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnConfirm">
+   <property name="geometry">
+    <rect>
+     <x>750</x>
+     <y>850</y>
+     <width>171</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Confirm</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

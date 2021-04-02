@@ -38,6 +38,7 @@ class MainWindow(baseMainWindow, formMainWindow):
     def new_window(self):
         self.child_window = PreMatch(Match(self.game.clubs[0], self.game.clubs[1]))
         self.child_window.show()
+        self.hide()
 
 
 if __name__ == "__main__":

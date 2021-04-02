@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QApplication, QTableWidgetItem
-from PyQt5 import uic, QtCore
+from PyQt5 import uic, QtCore, QtWidgets
 from PyQt5.QtGui import QBrush, QColor
+import gui.match
 import sys
 
 uiPreMatch = "gui/pre-match.ui"
@@ -8,10 +9,11 @@ formPreMatch, basePreMatch = uic.loadUiType(uiPreMatch)
 
 
 class PreMatch(basePreMatch, formPreMatch):
-    def __init__(self, match):
+    def __init__(self, parentWindow, match):
         super(basePreMatch, self).__init__()
 
         self.setupUi(self)
+        self.parent_window = parentWindow
         self.match = match
         self.is_home_active = True
         self.update()
@@ -45,11 +47,22 @@ class PreMatch(basePreMatch, formPreMatch):
             row += 1
 
     def update_combobox(self):
+        # Reset players that will attend match and clear comboboxes
+        if self.is_home_active:
+            self.match.home_players = []
+        else:
+            self.match.away_players = []
         self.clear_all_comboboxes()
+
+        # Loop through team players and add them to comboboxes and to the list of players that will attend the match
         players = self.match.home.players if self.is_home_active else self.match.away.players
         for row in range(self.tblPlayers.rowCount()):
             for player in players:
                 if self.tblPlayers.item(row, 0).text() == player.name and self.tblPlayers.item(row, 5).checkState():
+                    if self.is_home_active:
+                        self.match.home_players.append(player)
+                    else:
+                        self.match.away_players.append(player)
                     if player.position.value != 1:
                         self.cbDefLw.addItem(player.name + " " + str(player.defense))
                         self.cbDefLb.addItem(player.name + " " + str(player.defense))
@@ -116,5 +129,27 @@ class PreMatch(basePreMatch, formPreMatch):
             self.cbDefLw.removeItem(1)
 
     def start_match(self):
+        # Check user selection
+        cnt = len(self.match.home_players) if self.is_home_active else len(self.match.away_players)
+        if cnt != 14:
+            error_dialog = QtWidgets.QMessageBox()
+            error_dialog.setWindowTitle("Warning")
+            if cnt > 14:
+                error_dialog.setText("You can't bring more than 14 players to the game!")
+            else:
+                error_dialog.setText("You can't bring less than 14 players to the game!")
+            error_dialog.exec_()
+            return
+        qm = QtWidgets.QMessageBox
+        ans = qm.question(self, "Start Match", "Are you sure?", qm.Yes | qm.No)
+        if ans == qm.No:
+            return
+
+        # Start Match if both players confirmed
+        if not self.is_home_active:
+            self.parent_window.child_window = gui.match.Match(self.match)
+            self.parent_window.child_window.show()
+
+        # Next player
         self.is_home_active = False
         self.update()

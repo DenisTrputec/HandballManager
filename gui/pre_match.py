@@ -13,11 +13,19 @@ class PreMatch(basePreMatch, formPreMatch):
 
         self.setupUi(self)
         self.match = match
-        self.update_table(self.match.home.players)
-        self.btnConfirm.clicked.connect(self.update_combobox)
+        self.is_home_active = True
+        self.update()
+        self.btnConfirmSelection.clicked.connect(self.update_combobox)
+        self.btnStartMatch.clicked.connect(self.start_match)
 
-    def update_table(self, team_players):
-        players = team_players
+    def update(self):
+        self.lblClubName.setText(self.match.home.name if self.is_home_active else self.match.away.name)
+        temp = "Next opponent: " + str(self.match.away.name if self.is_home_active else self.match.home.name)
+        self.lblNextOpponent.setText(temp)
+        self.update_table()
+
+    def update_table(self):
+        players = self.match.home.players if self.is_home_active else self.match.away.players
         players.sort(key=lambda x: x.position.value)
         self.tblPlayers.setRowCount(len(players))
         for row, player in enumerate(players):
@@ -37,13 +45,11 @@ class PreMatch(basePreMatch, formPreMatch):
             row += 1
 
     def update_combobox(self):
-        players_selected = []
         self.clear_all_comboboxes()
+        players = self.match.home.players if self.is_home_active else self.match.away.players
         for row in range(self.tblPlayers.rowCount()):
-            for player in self.match.home.players:
+            for player in players:
                 if self.tblPlayers.item(row, 0).text() == player.name and self.tblPlayers.item(row, 5).checkState():
-                    # if player.position.value != 1:
-                    #     players_selected.append(player.name + " " + str(player.defense))
                     if player.position.value != 1:
                         self.cbDefLw.addItem(player.name + " " + str(player.defense))
                         self.cbDefLb.addItem(player.name + " " + str(player.defense))
@@ -68,7 +74,6 @@ class PreMatch(basePreMatch, formPreMatch):
                         self.cbAtkRw.addItem(player.name + " " + str(player.attack))
                     break
         self.set_default_values()
-        # self.defense_combobox(players_selected)
 
     def clear_all_comboboxes(self):
         self.cbAtkGk.clear()
@@ -87,12 +92,6 @@ class PreMatch(basePreMatch, formPreMatch):
         self.cbDefRw.clear()
 
     def set_default_values(self):
-        # self.cbDefLw.setCurrentIndex(self.cbDefLw.findText(self.cbAtkLw.currentText().split(' ')[0]))
-        # self.cbDefLb.setCurrentIndex(self.cbDefLb.findText(self.cbAtkLb.currentText().split(' ')[0]))
-        # self.cbDefCb.setCurrentIndex(self.cbDefCb.findText(self.cbAtkCb.currentText().split(' ')[0]))
-        # self.cbDefP.setCurrentIndex(self.cbAtkP.findText(self.cbAtkP.currentText().split(' ')[0]))
-        # self.cbDefRb.setCurrentIndex(self.cbAtkRb.findText(self.cbAtkRb.currentText().split(' ')[0]))
-        # self.cbDefRw.setCurrentIndex(self.cbAtkRw.findText(self.cbAtkRw.currentText().split(' ')[0]))
         self.cbDefLw.setCurrentIndex(0)
         self.cbDefLb.setCurrentIndex(2)
         self.cbDefCb.setCurrentIndex(4)
@@ -115,3 +114,7 @@ class PreMatch(basePreMatch, formPreMatch):
         self.cbDefRw.addItems(list6)
         for i in range(5):
             self.cbDefLw.removeItem(1)
+
+    def start_match(self):
+        self.is_home_active = False
+        self.update()

@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>Handball Manager</string>
   </property>
   <widget class="QLabel" name="lblClubName">
    <property name="geometry">
@@ -186,7 +186,7 @@
     <string>Attack Tactics</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="btnConfirm">
+  <widget class="QPushButton" name="btnStartMatch">
    <property name="geometry">
     <rect>
      <x>750</x>
@@ -201,7 +201,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Confirm</string>
+    <string>Start Match</string>
    </property>
   </widget>
   <widget class="QComboBox" name="cbDefRb">
@@ -290,6 +290,24 @@
      <width>180</width>
      <height>30</height>
     </rect>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnConfirmSelection">
+   <property name="geometry">
+    <rect>
+     <x>750</x>
+     <y>770</y>
+     <width>171</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Confirm Selection</string>
    </property>
   </widget>
  </widget>

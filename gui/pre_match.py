@@ -9,11 +9,11 @@ formPreMatch, basePreMatch = uic.loadUiType(uiPreMatch)
 
 
 class PreMatch(basePreMatch, formPreMatch):
-    def __init__(self, parentWindow, match):
+    def __init__(self, parent_window, match):
         super(basePreMatch, self).__init__()
 
         self.setupUi(self)
-        self.parent_window = parentWindow
+        self.parent_window = parent_window
         self.match = match
         self.is_home_active = True
         self.update()

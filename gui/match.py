@@ -1,7 +1,6 @@
-from PyQt5.QtWidgets import QApplication, QTableWidgetItem
-from PyQt5 import uic, QtCore, QtWidgets
+from PyQt5.QtWidgets import QTableWidgetItem
+from PyQt5 import uic, QtWidgets
 from PyQt5.QtGui import QBrush, QColor
-import sys
 
 uiMatch = "gui/match.ui"
 formMatch, baseMatch = uic.loadUiType(uiMatch)
@@ -23,9 +22,13 @@ class Match(baseMatch, formMatch):
 
         update_combobox(self.match.home_players, self.home_atk, self.home_def)
         update_combobox(self.match.away_players, self.away_atk, self.away_def)
+        update_table(self.tblPlayerStatsHome, self.match.home_players)
+        update_table(self.tblPlayerStatsAway, self.match.away_players)
 
         self.lblHome.setText(match.home.name)
         self.lblAway.setText(match.away.name)
+        self.lblScore.setText(str(self.match.home_goals) + " : " + str(self.match.away_goals))
+        self.lblTime.setText(str(self.match.time) + ":00")
 
         self.btnStartMatch.clicked.connect(self.start_match)
 
@@ -78,11 +81,22 @@ class Match(baseMatch, formMatch):
             return
         if check_defense_valid(self.away_def) is False:
             return
-        player_names_home_atk = return_player_names(self.home_atk)
-        player_names_home_def = return_player_names(self.home_def)
-        player_names_away_atk = return_player_names(self.away_atk)
-        player_names_away_def = return_player_names(self.away_def)
-        self.match.start_match(player_names_home_atk, player_names_home_def, player_names_away_atk, player_names_away_def)
+
+        player_names_h_atk = return_player_names(self.home_atk)
+        player_names_h_def = return_player_names(self.home_def)
+        player_names_a_atk = return_player_names(self.away_atk)
+        player_names_a_def = return_player_names(self.away_def)
+        self.match.start_match(player_names_h_atk, player_names_h_def, player_names_a_atk, player_names_a_def)
+
+        update_table(self.tblPlayerStatsHome, self.match.home_players)
+        update_table(self.tblPlayerStatsAway, self.match.away_players)
+
+        self.lblScore.setText(str(self.match.home_goals) + " : " + str(self.match.away_goals))
+        self.lblTime.setText(str(self.match.time) + ":00")
+        if self.match.time == 30:
+            self.btnStartMatch.setText("Continue Match")
+        elif self.match.time == 60:
+            self.btnStartMatch.setText("Finish Match")
 
 
 def update_combobox(players_sm, pos_atk, pos_def):
@@ -148,3 +162,39 @@ def return_player_names(pos):
             pos["lb"].currentText().split(' ')[0], pos["cb"].currentText().split(' ')[0],
             pos["p"].currentText().split(' ')[0], pos["rb"].currentText().split(' ')[0],
             pos["rw"].currentText().split(' ')[0]]
+
+
+def update_table(table, players_sm):
+    table.setRowCount(len(players_sm))
+    for row, player_sm in enumerate(players_sm):
+        table.setItem(row, 0, QTableWidgetItem(player_sm.player.name))
+        table.setItem(row, 1, QTableWidgetItem(str(player_sm.player.age)))
+        table.setItem(row, 2, QTableWidgetItem(player_sm.player.position.name))
+
+        item_atk = QTableWidgetItem(str(player_sm.attack_rating))
+        item_def = QTableWidgetItem(str(player_sm.defense_rating))
+
+        if player_sm.attack_minutes > 0:
+            if player_sm.attack_rating > player_sm.player.attack:
+                item_atk.setForeground(QBrush(QColor(0, 255, 0)))
+            elif player_sm.attack_rating == player_sm.player.attack:
+                item_atk.setForeground(QBrush(QColor(0, 0, 255)))
+            else:
+                item_atk.setForeground(QBrush(QColor(255, 0, 0)))
+            table.setItem(row, 3, item_atk)
+        else:
+            table.setItem(row, 3, QTableWidgetItem("0"))
+
+        if player_sm.defense_minutes > 0:
+            if player_sm.defense_rating > player_sm.player.defense:
+                item_def.setForeground(QBrush(QColor(0, 255, 0)))
+            elif player_sm.defense_rating == player_sm.player.defense:
+                item_def.setForeground(QBrush(QColor(0, 0, 255)))
+            else:
+                item_def.setForeground(QBrush(QColor(255, 0, 0)))
+            table.setItem(row, 4, item_def)
+        else:
+            table.setItem(row, 4, QTableWidgetItem("0"))
+
+        table.setItem(row, 5, QTableWidgetItem(str(player_sm.attack_minutes + player_sm.defense_minutes)))
+        row += 1

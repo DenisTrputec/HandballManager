@@ -21,8 +21,8 @@ class Match(baseMatch, formMatch):
         self.away_atk = self.create_dict_away_atk()
         self.away_def = self.create_dict_away_def()
 
-        self.update_combobox(self.match.home_players, self.home_atk, self.home_def)
-        self.update_combobox(self.match.away_players, self.away_atk, self.away_def)
+        update_combobox(self.match.home_players, self.home_atk, self.home_def)
+        update_combobox(self.match.away_players, self.away_atk, self.away_def)
 
         self.lblHome.setText(match.home.name)
         self.lblAway.setText(match.away.name)
@@ -73,77 +73,78 @@ class Match(baseMatch, formMatch):
             "rw": self.cbDefRwA
         }
 
-    def update_combobox(self, players_sm, pos_atk, pos_def):
-        for player_sm in players_sm:
-            if player_sm.player.position.value != 1:
-                for key in pos_def.keys():
-                    pos_def[key].addItem(player_sm.player.name + " " + str(player_sm.player.defense))
-            if player_sm.player.position.value == 1:
-                pos_atk["gk"].addItem(player_sm.player.name + " " + str(player_sm.player.defense))
-                pos_def["gk"].addItem(player_sm.player.name + " " + str(player_sm.player.defense))
-            elif player_sm.player.position.value == 2:
-                pos_atk["lw"].addItem(player_sm.player.name + " " + str(player_sm.player.attack))
-            elif player_sm.player.position.value == 3:
-                pos_atk["lb"].addItem(player_sm.player.name + " " + str(player_sm.player.attack))
-            elif player_sm.player.position.value == 4:
-                pos_atk["cb"].addItem(player_sm.player.name + " " + str(player_sm.player.attack))
-            elif player_sm.player.position.value == 5:
-                pos_atk["p"].addItem(player_sm.player.name + " " + str(player_sm.player.attack))
-            elif player_sm.player.position.value == 6:
-                pos_atk["rb"].addItem(player_sm.player.name + " " + str(player_sm.player.attack))
-            elif player_sm.player.position.value == 7:
-                pos_atk["rw"].addItem(player_sm.player.name + " " + str(player_sm.player.attack))
-        self.set_default_values(pos_def)
-
-    @staticmethod
-    def set_default_values(pos_def):
-        pos_def["lw"].setCurrentIndex(0)
-        pos_def["lb"].setCurrentIndex(2)
-        pos_def["cb"].setCurrentIndex(4)
-        pos_def["p"].setCurrentIndex(6)
-        pos_def["rb"].setCurrentIndex(8)
-        pos_def["rw"].setCurrentIndex(10)
-
     def start_match(self):
-        self.check_defense_valid_and_substitutions()
-        self.match.play(self.cbAtkLwH.currentText())
-
-    def check_defense_valid_and_substitutions(self):
-        list_unique = []
-        if self.cbDefGkA.currentText() not in list_unique:
-            list_unique.append(self.cbDefGkA.currentText().split(' ')[0])
-        if self.cbDefLwA.currentText() not in list_unique:
-            list_unique.append(self.cbDefLwA.currentText().split(' ')[0])
-        if self.cbDefLbA.currentText() not in list_unique:
-            list_unique.append(self.cbDefLbA.currentText().split(' ')[0])
-        if self.cbDefCbA.currentText() not in list_unique:
-            list_unique.append(self.cbDefCbA.currentText().split(' ')[0])
-        if self.cbDefPA.currentText() not in list_unique:
-            list_unique.append(self.cbDefPA.currentText().split(' ')[0])
-        if self.cbDefRbA.currentText() not in list_unique:
-            list_unique.append(self.cbDefRbA.currentText().split(' ')[0])
-        if self.cbDefRwA.currentText() not in list_unique:
-            list_unique.append(self.cbDefRwA.currentText().split(' ')[0])
-        if len(list_unique) < 7:
-            print(False)
+        if check_defense_valid(self.home_def) is False:
             return
-        subs_away = self.count_substitutions(list_unique)
-        print(subs_away)
+        if check_defense_valid(self.away_def) is False:
+            return
+        player_names_home_atk = return_player_names(self.home_atk)
+        player_names_home_def = return_player_names(self.home_def)
+        player_names_away_atk = return_player_names(self.away_atk)
+        player_names_away_def = return_player_names(self.away_def)
+        # self.match.play(self.cbAtkLwH.currentText())
 
-    def count_substitutions(self, list_unique):
-        subs = 7
-        if self.cbDefGkA.currentText().split(' ')[0] in list_unique:
-            subs -= 1
-        if self.cbAtkLwA.currentText().split(' ')[0] in list_unique:
-            subs -= 1
-        if self.cbAtkLbA.currentText().split(' ')[0] in list_unique:
-            subs -= 1
-        if self.cbAtkCbA.currentText().split(' ')[0] in list_unique:
-            subs -= 1
-        if self.cbAtkPA.currentText().split(' ')[0] in list_unique:
-            subs -= 1
-        if self.cbAtkRbA.currentText().split(' ')[0] in list_unique:
-            subs -= 1
-        if self.cbAtkRwA.currentText().split(' ')[0] in list_unique:
-            subs -= 1
-        return subs
+
+def update_combobox(players_sm, pos_atk, pos_def):
+    for player_sm in players_sm:
+        if player_sm.player.position.value != 1:
+            for key in pos_def.keys():
+                pos_def[key].addItem(player_sm.player.name + " " + str(player_sm.player.defense))
+        if player_sm.player.position.value == 1:
+            pos_atk["gk"].addItem(player_sm.player.name + " " + str(player_sm.player.defense))
+            pos_def["gk"].addItem(player_sm.player.name + " " + str(player_sm.player.defense))
+        elif player_sm.player.position.value == 2:
+            pos_atk["lw"].addItem(player_sm.player.name + " " + str(player_sm.player.attack))
+        elif player_sm.player.position.value == 3:
+            pos_atk["lb"].addItem(player_sm.player.name + " " + str(player_sm.player.attack))
+        elif player_sm.player.position.value == 4:
+            pos_atk["cb"].addItem(player_sm.player.name + " " + str(player_sm.player.attack))
+        elif player_sm.player.position.value == 5:
+            pos_atk["p"].addItem(player_sm.player.name + " " + str(player_sm.player.attack))
+        elif player_sm.player.position.value == 6:
+            pos_atk["rb"].addItem(player_sm.player.name + " " + str(player_sm.player.attack))
+        elif player_sm.player.position.value == 7:
+            pos_atk["rw"].addItem(player_sm.player.name + " " + str(player_sm.player.attack))
+    set_default_values(pos_def)
+
+
+def set_default_values(pos_def):
+    pos_def["lw"].setCurrentIndex(0)
+    pos_def["lb"].setCurrentIndex(2)
+    pos_def["cb"].setCurrentIndex(4)
+    pos_def["p"].setCurrentIndex(6)
+    pos_def["rb"].setCurrentIndex(8)
+    pos_def["rw"].setCurrentIndex(10)
+
+
+def check_defense_valid(pos_def):
+    list_unique = []
+    if pos_def["gk"].currentText() not in list_unique:
+        list_unique.append(pos_def["gk"].currentText())
+    if pos_def["lw"].currentText() not in list_unique:
+        list_unique.append(pos_def["lw"].currentText())
+    if pos_def["lb"].currentText() not in list_unique:
+        list_unique.append(pos_def["lb"].currentText())
+    if pos_def["cb"].currentText() not in list_unique:
+        list_unique.append(pos_def["cb"].currentText())
+    if pos_def["p"].currentText() not in list_unique:
+        list_unique.append(pos_def["p"].currentText())
+    if pos_def["rb"].currentText() not in list_unique:
+        list_unique.append(pos_def["rb"].currentText())
+    if pos_def["rw"].currentText() not in list_unique:
+        list_unique.append(pos_def["rw"].currentText())
+    if len(list_unique) < 7:
+        error_dialog = QtWidgets.QMessageBox()
+        error_dialog.setWindowTitle("Warning")
+        error_dialog.setText("You can't use same player on more than 1 position!")
+        error_dialog.exec_()
+        return False
+    else:
+        return True
+
+
+def return_player_names(pos):
+    return [pos["gk"].currentText().split(' ')[0], pos["lw"].currentText().split(' ')[0],
+            pos["lb"].currentText().split(' ')[0], pos["cb"].currentText().split(' ')[0],
+            pos["p"].currentText().split(' ')[0], pos["rb"].currentText().split(' ')[0],
+            pos["rw"].currentText().split(' ')[0]]

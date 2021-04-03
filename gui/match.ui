@@ -189,7 +189,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="cbAtkGkH_2">
+  <widget class="QComboBox" name="cbAtkGkA">
    <property name="geometry">
     <rect>
      <x>1390</x>
@@ -199,7 +199,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="cbDefLwH_2">
+  <widget class="QComboBox" name="cbDefLwA">
    <property name="geometry">
     <rect>
      <x>1110</x>
@@ -209,7 +209,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="cbDefGkH_2">
+  <widget class="QComboBox" name="cbDefGkA">
    <property name="geometry">
     <rect>
      <x>1390</x>
@@ -237,7 +237,7 @@
     <string>Defense Tactics</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="cbAtkLwH_2">
+  <widget class="QComboBox" name="cbAtkLwA">
    <property name="geometry">
     <rect>
      <x>1110</x>
@@ -247,7 +247,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="cbAtkPH_2">
+  <widget class="QComboBox" name="cbAtkPA">
    <property name="geometry">
     <rect>
      <x>1390</x>
@@ -275,7 +275,7 @@
     <string>Attack Tactics</string>
    </property>
   </widget>
-  <widget class="QComboBox" name="cbAtkCbH_2">
+  <widget class="QComboBox" name="cbAtkCbA">
    <property name="geometry">
     <rect>
      <x>1390</x>
@@ -285,7 +285,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="cbDefRbH_2">
+  <widget class="QComboBox" name="cbDefRbA">
    <property name="geometry">
     <rect>
      <x>1590</x>
@@ -295,7 +295,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="cbDefRwH_2">
+  <widget class="QComboBox" name="cbDefRwA">
    <property name="geometry">
     <rect>
      <x>1670</x>
@@ -305,7 +305,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="cbAtkRwH_2">
+  <widget class="QComboBox" name="cbAtkRwA">
    <property name="geometry">
     <rect>
      <x>1670</x>
@@ -315,7 +315,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="cbDefLbH_2">
+  <widget class="QComboBox" name="cbDefLbA">
    <property name="geometry">
     <rect>
      <x>1190</x>
@@ -325,7 +325,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="cbAtkLbH_2">
+  <widget class="QComboBox" name="cbAtkLbA">
    <property name="geometry">
     <rect>
      <x>1170</x>
@@ -335,7 +335,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="cbDefCbH_2">
+  <widget class="QComboBox" name="cbDefCbA">
    <property name="geometry">
     <rect>
      <x>1390</x>
@@ -345,7 +345,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="cbAtkRbH_2">
+  <widget class="QComboBox" name="cbAtkRbA">
    <property name="geometry">
     <rect>
      <x>1610</x>
@@ -355,7 +355,7 @@
     </rect>
    </property>
   </widget>
-  <widget class="QComboBox" name="cbDefPH_2">
+  <widget class="QComboBox" name="cbDefPA">
    <property name="geometry">
     <rect>
      <x>1390</x>

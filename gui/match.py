@@ -82,7 +82,7 @@ class Match(baseMatch, formMatch):
         player_names_home_def = return_player_names(self.home_def)
         player_names_away_atk = return_player_names(self.away_atk)
         player_names_away_def = return_player_names(self.away_def)
-        # self.match.play(self.cbAtkLwH.currentText())
+        self.match.start_match(player_names_home_atk, player_names_home_def, player_names_away_atk, player_names_away_def)
 
 
 def update_combobox(players_sm, pos_atk, pos_def):

@@ -7,10 +7,11 @@ formMatch, baseMatch = uic.loadUiType(uiMatch)
 
 
 class Match(baseMatch, formMatch):
-    def __init__(self, match):
+    def __init__(self, parent_window, match):
         super(baseMatch, self).__init__()
 
         self.setupUi(self)
+        self.parent_window = parent_window
 
         self.match = match
         self.match.create_player_statistics()
@@ -77,6 +78,11 @@ class Match(baseMatch, formMatch):
         }
 
     def start_match(self):
+        if self.match.time == 60:
+            self.parent_window.show()
+            self.parent_window.child_window = None
+            return
+
         if check_defense_valid(self.home_def) is False:
             return
         if check_defense_valid(self.away_def) is False:

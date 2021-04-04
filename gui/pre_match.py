@@ -147,7 +147,7 @@ class PreMatch(basePreMatch, formPreMatch):
 
         # Start Match if both players confirmed
         if not self.is_home_active:
-            self.parent_window.child_window = gui.match.Match(self.match)
+            self.parent_window.child_window = gui.match.Match(self.parent_window, self.match)
             self.parent_window.child_window.show()
 
         # Next player

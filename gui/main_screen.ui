@@ -19,14 +19,14 @@
      <rect>
       <x>20</x>
       <y>50</y>
-      <width>911</width>
+      <width>760</width>
       <height>511</height>
      </rect>
     </property>
     <property name="minimumSize">
      <size>
-      <width>811</width>
-      <height>511</height>
+      <width>760</width>
+      <height>510</height>
      </size>
     </property>
     <property name="showGrid">
@@ -36,7 +36,7 @@
      <number>40</number>
     </attribute>
     <attribute name="horizontalHeaderDefaultSectionSize">
-     <number>100</number>
+     <number>80</number>
     </attribute>
     <attribute name="verticalHeaderDefaultSectionSize">
      <number>23</number>

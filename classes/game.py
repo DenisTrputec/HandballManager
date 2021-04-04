@@ -12,12 +12,13 @@ class Game:
         self.leagues = []
         self.clubs = []
         self.players = []
+        self.team_statistics = []
 
     def new_game(self, save_name):
         self.name = save_name
-        self.season = 1
-        self.week = 1
         shutil.copy2("database/default.db", "save/" + save_name + ".db")
+        db.new_game(self)
+        db.load_game(self)
 
     def save_game(self):
         db.save_game(self)

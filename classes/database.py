@@ -1,9 +1,20 @@
-import random
 import sqlite3
 from classes.country import Country
 from classes.league import League
 from classes.club import Club
 from classes.player import Player
+
+
+def new_game(game):
+    db_name = 'save/' + game.name + '.db'
+
+    connection = sqlite3.connect(db_name)
+    cursor = connection.cursor()
+
+    cursor.execute("UPDATE calendar SET game_name='" + game.name + "' WHERE game_name LIKE 'default'")
+
+    connection.commit()
+    connection.close()
 
 
 def save_game(game):
@@ -67,6 +78,12 @@ def load_game(game):
                 for club in game.clubs:
                     if club.get_id() == t[8]:
                         game.players.append(Player(t[0], t[1], t[2], t[3], t[4], t[5], t[6], country, club, t[9], t[10], t[11]))
+
+    # cursor.execute("SELECT * FROM team_statistics")
+    # tuple_list = cursor.fetchall()
+    # for t in tuple_list:
+    #     if game.season == t[3]:
+    #         game.team_statistics.append()
 
     for club in game.clubs:
         for player in game.players:

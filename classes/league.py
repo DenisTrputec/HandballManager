@@ -8,6 +8,7 @@ class League(Competition):
         super().__init__(competition_id, name, short_name, country)
         self.level = level
         self.teams = []
+        self.standings = []
         self.schedule = []
 
     def __repr__(self):

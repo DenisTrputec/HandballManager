@@ -5,6 +5,7 @@ from PyQt5 import uic
 from classes.game import Game
 from classes.match import Match
 from gui.dialog_new_game import DialogNewGame
+from gui.main_screen import MainScreen
 from gui.pre_match import PreMatch
 
 
@@ -27,7 +28,7 @@ class MainWindow(baseMainWindow, formMainWindow):
     def open_new_game_dialog(self):
         self.dialog = DialogNewGame(self.game)
         self.dialog.show()
-        # self.dialog.accepted.connect(self.new_window)
+        self.dialog.accepted.connect(self.new_window)
 
     def open_load_game_dialog(self):
         file_path = QFileDialog.getOpenFileName(self, caption='Browse save file', directory='save/',
@@ -36,7 +37,8 @@ class MainWindow(baseMainWindow, formMainWindow):
         self.new_window()
 
     def new_window(self):
-        self.child_window = PreMatch(self, Match(self.game.leagues[0], 1, self.game.clubs[0], self.game.clubs[1]))
+        # self.child_window = PreMatch(self, Match(self.game.leagues[0], 1, self.game.clubs[0], self.game.clubs[1]))
+        self.child_window = MainScreen(self, self.game)
         self.child_window.show()
         self.hide()
 

@@ -1,8 +1,9 @@
-class ClubStatistics:
-    def __init__(self, club):
+class TeamStatistics:
+    def __init__(self, club, league, won=0, drawn=0, lost=0, gf=0, ga=0):
         self.club = club
-        self.wins = 0
-        self.draws = 0
-        self.losses = 0
-        self.goals_for = 0
-        self.goals_away = 0
+        self.league = league
+        self.won = won
+        self.drawn = drawn
+        self.lost = lost
+        self.goals_for = gf
+        self.goals_away = ga

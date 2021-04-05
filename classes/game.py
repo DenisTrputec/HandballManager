@@ -13,12 +13,16 @@ class Game:
         self.clubs = []
         self.players = []
         self.team_statistics = []
+        self.schedule = []
 
     def new_game(self, save_name):
         self.name = save_name
         shutil.copy2("database/default.db", "save/" + save_name + ".db")
         db.new_game(self)
         db.load_game(self)
+        for league in self.leagues:
+            league.create_schedule()
+        db.insert_match(self)
 
     def save_game(self):
         db.save_game(self)

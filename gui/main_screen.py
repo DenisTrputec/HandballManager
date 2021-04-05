@@ -19,6 +19,7 @@ class MainScreen(baseMainScreen, formMainScreen):
         self.update_table_league()
 
         self.cbLeague.currentTextChanged.connect(self.update_table_league)
+        self.btnNextMatch.clicked.connect(self.next_match)
 
     def fill_combobox_league(self):
         for league in self.game.leagues:
@@ -27,7 +28,9 @@ class MainScreen(baseMainScreen, formMainScreen):
     def update_table_league(self):
         for league in self.game.leagues:
             if league.name == self.cbLeague.currentText():
+                self.update_combobox_team(league)
                 league.standings.sort(key=lambda x: [x.points(), x.goal_diff(), x.goals_for], reverse=True)
+
                 self.tblLeague.setRowCount(len(league.standings))
                 for row, club_s in enumerate(league.standings):
                     self.tblLeague.setItem(row, 0, QTableWidgetItem(club_s.club.name))
@@ -52,3 +55,14 @@ class MainScreen(baseMainScreen, formMainScreen):
                 header.setSectionResizeMode(8, QtWidgets.QHeaderView.ResizeToContents)
                 break
 
+    def update_combobox_team(self, league):
+        self.cbTeam.clear()
+        for team in league.teams:
+            self.cbTeam.addItem(team.name)
+
+    def next_match(self):
+        for league in self.game.leagues:
+            for match in league.schedule:
+                if match.time == 0:
+                    print(match)
+                    break

@@ -33,8 +33,3 @@ class League(Competition):
                 else:
                     self.schedule.append(Match(self, i + 1, list2[j], list1[j]))
             self.teams.insert(1, self.teams.pop())
-
-    def print_schedule(self):
-        print(self.name)
-        for match in self.schedule:
-            print(match.round, match.home.name, match.away.name)

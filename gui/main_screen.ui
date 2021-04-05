@@ -102,6 +102,107 @@
      </rect>
     </property>
    </widget>
+   <widget class="QComboBox" name="cbTeam">
+    <property name="geometry">
+     <rect>
+      <x>940</x>
+      <y>20</y>
+      <width>201</width>
+      <height>21</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QTableWidget" name="tblTeam">
+    <property name="geometry">
+     <rect>
+      <x>940</x>
+      <y>50</y>
+      <width>760</width>
+      <height>601</height>
+     </rect>
+    </property>
+    <property name="minimumSize">
+     <size>
+      <width>760</width>
+      <height>510</height>
+     </size>
+    </property>
+    <property name="showGrid">
+     <bool>true</bool>
+    </property>
+    <attribute name="horizontalHeaderMinimumSectionSize">
+     <number>40</number>
+    </attribute>
+    <attribute name="horizontalHeaderDefaultSectionSize">
+     <number>80</number>
+    </attribute>
+    <attribute name="verticalHeaderDefaultSectionSize">
+     <number>23</number>
+    </attribute>
+    <column>
+     <property name="text">
+      <string>Player</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Age</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Position</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Games</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Atk_rat</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Atk_min</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Def_rat</string>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>8</pointsize>
+      </font>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Def_min</string>
+     </property>
+    </column>
+   </widget>
+   <widget class="QPushButton" name="btnNextMatch">
+    <property name="geometry">
+     <rect>
+      <x>940</x>
+      <y>690</y>
+      <width>171</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Next Match</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

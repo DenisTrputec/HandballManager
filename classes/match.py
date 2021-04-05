@@ -3,16 +3,19 @@ import random
 
 
 class Match:
-    def __init__(self, competition, rnd, home_club, away_club):
+    def __init__(self, competition, rnd, home_club, away_club, time=0, home_goals=0, away_goals=0):
         self.competition = competition
         self.round = rnd
         self.home = home_club
         self.away = away_club
-        self.time = 0
-        self.home_goals = 0
-        self.away_goals = 0
+        self.time = time
+        self.home_goals = home_goals
+        self.away_goals = away_goals
         self.home_players = []
         self.away_players = []
+
+    def __str__(self):
+        return f"Round:{self.round} {self.home.name}-{self.away.name} {self.home_goals}:{self.away_goals}"
 
     def create_player_statistics(self):
         self.home_players = [PlayerStatisticsMatch(player, self) for player in self.home_players]

@@ -42,11 +42,14 @@ class Match:
         away_subs = len([p for p in away_atk if p not in away_def])
 
         print("subs", home_subs, away_subs)
-        self.home_goals += 16 + max(0, (away_subs - home_subs) * 2)
-        self.away_goals += 15 + max(0, (home_subs - away_subs) * 2)
+        self.home_goals += 13 + max(0, (away_subs - home_subs) * 2)
+        self.away_goals += 12 + max(0, (home_subs - away_subs) * 2)
         print(str(self.home_goals) + ":" + str(self.away_goals))
 
         self.time += 30
+
+    def finish_match(self):
+        self.competition.save_match_result(self)
 
 
 def play_atk(player_sm):

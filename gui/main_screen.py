@@ -33,16 +33,16 @@ class MainScreen(baseMainScreen, formMainScreen):
                 league.standings.sort(key=lambda x: [x.points(), x.goal_diff(), x.goals_for], reverse=True)
 
                 self.tblLeague.setRowCount(len(league.standings))
-                for row, club_s in enumerate(league.standings):
-                    self.tblLeague.setItem(row, 0, QTableWidgetItem(club_s.club.name))
-                    self.tblLeague.setItem(row, 1, QTableWidgetItem(str(club_s.played())))
-                    self.tblLeague.setItem(row, 2, QTableWidgetItem(str(club_s.won)))
-                    self.tblLeague.setItem(row, 3, QTableWidgetItem(str(club_s.drawn)))
-                    self.tblLeague.setItem(row, 4, QTableWidgetItem(str(club_s.lost)))
-                    self.tblLeague.setItem(row, 5, QTableWidgetItem(str(club_s.goals_for)))
-                    self.tblLeague.setItem(row, 6, QTableWidgetItem(str(club_s.goals_away)))
-                    self.tblLeague.setItem(row, 7, QTableWidgetItem(str(club_s.goal_diff())))
-                    self.tblLeague.setItem(row, 8, QTableWidgetItem(str(club_s.points())))
+                for row, team_s in enumerate(league.standings):
+                    self.tblLeague.setItem(row, 0, QTableWidgetItem(team_s.club.name))
+                    self.tblLeague.setItem(row, 1, QTableWidgetItem(str(team_s.played())))
+                    self.tblLeague.setItem(row, 2, QTableWidgetItem(str(team_s.won)))
+                    self.tblLeague.setItem(row, 3, QTableWidgetItem(str(team_s.drawn)))
+                    self.tblLeague.setItem(row, 4, QTableWidgetItem(str(team_s.lost)))
+                    self.tblLeague.setItem(row, 5, QTableWidgetItem(str(team_s.goals_for)))
+                    self.tblLeague.setItem(row, 6, QTableWidgetItem(str(team_s.goals_away)))
+                    self.tblLeague.setItem(row, 7, QTableWidgetItem(str(team_s.goal_diff())))
+                    self.tblLeague.setItem(row, 8, QTableWidgetItem(str(team_s.points())))
                     row += 1
                 header = self.tblLeague.horizontalHeader()
                 header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)

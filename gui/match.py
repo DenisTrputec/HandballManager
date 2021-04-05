@@ -79,7 +79,9 @@ class Match(baseMatch, formMatch):
 
     def start_match(self):
         if self.match.time == 60:
+            self.match.finish_match()
             self.parent_window.show()
+            self.parent_window.update_table_league()
             self.parent_window.child_window = None
             return
 
@@ -109,7 +111,8 @@ def update_combobox(players_sm, pos_atk, pos_def):
     for player_sm in players_sm:
         if player_sm.player.position.value != 1:
             for key in pos_def.keys():
-                pos_def[key].addItem(player_sm.player.name + " " + str(player_sm.player.defense))
+                if key != "gk":
+                    pos_def[key].addItem(player_sm.player.name + " " + str(player_sm.player.defense))
         if player_sm.player.position.value == 1:
             pos_atk["gk"].addItem(player_sm.player.name + " " + str(player_sm.player.defense))
             pos_def["gk"].addItem(player_sm.player.name + " " + str(player_sm.player.defense))

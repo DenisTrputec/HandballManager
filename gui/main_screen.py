@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QApplication, QTableWidgetItem
 from PyQt5 import uic, QtCore, QtWidgets
 from PyQt5.QtGui import QBrush, QColor
-import gui.match
+from gui.pre_match import PreMatch
 import sys
 
 uiMainScreen = "gui/main_screen.ui"
@@ -14,6 +14,7 @@ class MainScreen(baseMainScreen, formMainScreen):
 
         self.setupUi(self)
         self.parent_window = parent_window
+        self.child_window = None
         self.game = game
         self.fill_combobox_league()
         self.update_table_league()
@@ -61,8 +62,10 @@ class MainScreen(baseMainScreen, formMainScreen):
             self.cbTeam.addItem(team.name)
 
     def next_match(self):
-        for league in self.game.leagues:
-            for match in league.schedule:
-                if match.time == 0:
-                    print(match)
-                    break
+        self.game.schedule.sort(key=lambda x: [x.round, x.competition.get_id()])
+        for match in self.game.schedule:
+            if match.time == 0:
+                self.child_window = PreMatch(self, match)
+                self.child_window.show()
+                self.hide()
+                break

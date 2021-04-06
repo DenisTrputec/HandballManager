@@ -30,6 +30,7 @@ class MainScreen(baseMainScreen, formMainScreen):
         for league in self.game.leagues:
             if league.name == self.cbLeague.currentText():
                 self.update_combobox_team(league)
+                self.update_combobox_schedule(league)
                 league.standings.sort(key=lambda x: [x.points(), x.goal_diff(), x.goals_for], reverse=True)
 
                 self.tblLeague.setRowCount(len(league.standings))
@@ -60,6 +61,23 @@ class MainScreen(baseMainScreen, formMainScreen):
         self.cbTeam.clear()
         for team in league.teams:
             self.cbTeam.addItem(team.name)
+
+    def update_combobox_schedule(self, league):
+        self.cbSchedule.clear()
+        for i in range(len(league.schedule) // len(league.teams) * 2):
+            self.cbSchedule.addItem("Round " + str(i + 1))
+
+        cnt = index = 0
+        for match in league.schedule:
+            if match.time == 0:
+                cnt += 1
+                if cnt == 1:
+                    index = match.round - 1
+                if cnt == len(league.teams) // 2:
+                    self.cbSchedule.setCurrentIndex(index)
+                    break
+            else:
+                cnt = 0
 
     def next_match(self):
         self.game.schedule.sort(key=lambda x: [x.round, x.competition.get_id()])

@@ -15,6 +15,8 @@ class DialogNewGame(baseDialogNewGame, formDialogNewGame):
         self.lblInfo.setText("")
 
     def accept(self):
+        if not os.path.exists('save'):
+            os.makedirs('save')
         if os.path.exists("save/" + self.tbSaveName.text() + ".db"):
             self.lblInfo.setText("Save file with that name already exists!")
             self.open()

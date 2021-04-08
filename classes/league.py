@@ -68,5 +68,17 @@ class League(Competition):
                 self.players_sc.append(PlayerStatisticsCompetition(player_sm.player, self, 1, player_sm.attack_rating,
                                                                    player_sm.attack_minutes, player_sm.defense_rating,
                                                                    player_sm.defense_minutes))
+
+        for player_sm in match.away_players:
             for player_sc in self.players_sc:
-                print(player_sc)
+                if player_sm.player.get_id() == player_sc.player.get_id():
+                    player_sc.games += 1
+                    player_sc.attack_rating += player_sm.attack_rating
+                    player_sc.attack_minutes += player_sm.attack_minutes
+                    player_sc.defense_rating += player_sm.defense_rating
+                    player_sc.defense_minutes += player_sm.defense_minutes
+                    break
+            else:
+                self.players_sc.append(PlayerStatisticsCompetition(player_sm.player, self, 1, player_sm.attack_rating,
+                                                                   player_sm.attack_minutes, player_sm.defense_rating,
+                                                                   player_sm.defense_minutes))

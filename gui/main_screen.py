@@ -66,12 +66,16 @@ class MainScreen(baseMainScreen, formMainScreen):
         self.update_table_team()
 
     def update_table_team(self):
+        self.tblTeam.setRowCount(0)
         for league in self.game.leagues:
             if league.name == self.cbLeague.currentText():
-                self.tblTeam.setRowCount(len(league.players_sc))
+                for club in league.teams:
+                    if self.cbTeam.currentText() == club.name:
+                        self.tblTeam.setRowCount(len(club.players))
                 row = 0
                 for player_sc in league.players_sc:
                     if player_sc.player.club.name == self.cbTeam.currentText():
+                        print(player_sc)
                         self.tblTeam.setItem(row, 0, QTableWidgetItem(player_sc.player.name))
                         self.tblTeam.setItem(row, 1, QTableWidgetItem(str(player_sc.player.age)))
                         self.tblTeam.setItem(row, 2, QTableWidgetItem(player_sc.player.position.name))

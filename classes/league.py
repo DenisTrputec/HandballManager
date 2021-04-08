@@ -1,5 +1,6 @@
 from classes.competition import Competition
 from classes.match import Match
+from classes.player_statistics_competition import PlayerStatisticsCompetition
 import random
 
 
@@ -10,6 +11,7 @@ class League(Competition):
         self.teams = []
         self.standings = []
         self.schedule = []
+        self.players_sc = []
 
     def __repr__(self):
         return f"<Competition> id: {self.__id}"
@@ -52,3 +54,19 @@ class League(Competition):
                     team_s.won += 1
                 team_s.goals_for += match.away_goals
                 team_s.goals_away += match.home_goals
+
+        for player_sm in match.home_players:
+            for player_sc in self.players_sc:
+                if player_sm.player.get_id() == player_sc.player.get_id():
+                    player_sc.games += 1
+                    player_sc.attack_rating += player_sm.attack_rating
+                    player_sc.attack_minutes += player_sm.attack_minutes
+                    player_sc.defense_rating += player_sm.defense_rating
+                    player_sc.defense_minutes += player_sm.defense_minutes
+                    break
+            else:
+                self.players_sc.append(PlayerStatisticsCompetition(player_sm.player, self, 1, player_sm.attack_rating,
+                                                                   player_sm.attack_minutes, player_sm.defense_rating,
+                                                                   player_sm.defense_minutes))
+            for player_sc in self.players_sc:
+                print(player_sc)

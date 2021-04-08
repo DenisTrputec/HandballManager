@@ -21,6 +21,7 @@ class MainScreen(baseMainScreen, formMainScreen):
 
         self.cbLeague.currentTextChanged.connect(self.update_table_league)
         self.cbSchedule.currentTextChanged.connect(self.update_table_schedule)
+        self.cbTeam.currentTextChanged.connect(self.update_table_team)
         self.btnNextMatch.clicked.connect(self.next_match)
 
     def fill_combobox_league(self):
@@ -62,6 +63,37 @@ class MainScreen(baseMainScreen, formMainScreen):
         self.cbTeam.clear()
         for team in league.teams:
             self.cbTeam.addItem(team.name)
+        self.update_table_team()
+
+    def update_table_team(self):
+        for league in self.game.leagues:
+            if league.name == self.cbLeague.currentText():
+                self.tblTeam.setRowCount(len(league.players_sc))
+                row = 0
+                for player_sc in league.players_sc:
+                    if player_sc.player.club.name == self.cbTeam.currentText():
+                        self.tblTeam.setItem(row, 0, QTableWidgetItem(player_sc.player.name))
+                        self.tblTeam.setItem(row, 1, QTableWidgetItem(str(player_sc.player.age)))
+                        self.tblTeam.setItem(row, 2, QTableWidgetItem(player_sc.player.position.name))
+                        self.tblTeam.setItem(row, 3, QTableWidgetItem(str(player_sc.games)))
+                        self.tblTeam.setItem(row, 4, QTableWidgetItem(str(player_sc.attack_rating)))
+                        self.tblTeam.setItem(row, 5, QTableWidgetItem(str(player_sc.attack_minutes)))
+                        self.tblTeam.setItem(row, 6, QTableWidgetItem(str(player_sc.defense_rating)))
+                        self.tblTeam.setItem(row, 7, QTableWidgetItem(str(player_sc.defense_minutes)))
+                        row += 1
+                        if row == len(league.players_sc):
+                            break
+                if len(league.players_sc) > 0:
+                    header = self.tblTeam.horizontalHeader()
+                    header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+                    header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+                    header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+                    header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+                    header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
+                    header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
+                    header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
+                    header.setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
+                    break
 
     def update_combobox_schedule(self, league):
         self.cbSchedule.clear()
@@ -88,7 +120,6 @@ class MainScreen(baseMainScreen, formMainScreen):
                 row = 0
                 for match in league.schedule:
                     if match.round == self.cbSchedule.currentIndex() + 1:
-                        print(match)
                         self.tblSchedule.setItem(row, 0, QTableWidgetItem(match.home.name))
                         self.tblSchedule.setItem(row, 1, QTableWidgetItem(match.away.name))
                         if match.time == 60:

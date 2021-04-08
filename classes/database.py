@@ -160,6 +160,35 @@ def load_game(game):
     connection.close()
 
 
+def load_schedule(game):
+    db_name = 'save/' + game.name + '.db'
+
+    connection = sqlite3.connect(db_name)
+    cursor = connection.cursor()
+
+    cursor.execute("SELECT * FROM match")
+    tuple_list = cursor.fetchall()
+    for t in tuple_list:
+        for league in game.leagues:
+            if league.get_id() == t[0]:
+                home = None
+                away = None
+                for team in game.clubs:
+                    if team.get_id() == t[2]:
+                        home = team
+                    if team.get_id() == t[3]:
+                        away = team
+                game.schedule.append(Match(league, t[1], home, away, t[4], t[5], t[6]))
+
+    for league in game.leagues:
+        for match in game.schedule:
+            if league.get_id() == match.competition.get_id():
+                league.schedule.append(match)
+
+
+    connection.commit()
+    connection.close()
+
 # def new_players():
 #     db_name = 'D:\Programiranje\Moje aplikacije\Python\HandballManager\database\default.db'
 #     connection = sqlite3.connect(db_name)

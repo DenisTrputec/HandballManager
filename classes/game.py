@@ -23,6 +23,7 @@ class Game:
         for league in self.leagues:
             league.create_schedule()
         db.insert_match(self)
+        db.load_schedule(self)
 
     def save_game(self):
         db.save_game(self)

@@ -42,8 +42,8 @@ class Match:
         away_subs = len([p for p in away_atk if p not in away_def])
 
         print("subs", home_subs, away_subs)
-        self.home_goals += 15 - home_subs * 2   # max(0, (home_subs - away_subs) * 2)
-        self.away_goals += 14 - away_subs * 2   # max(0, (away_subs - home_subs) * 2)
+        self.home_goals += 15 - max(0, (home_subs - away_subs) * 2)
+        self.away_goals += 14 - max(0, (away_subs - home_subs) * 2)
         while (self.home_goals + self.away_goals) > self.time + 30:
             self.home_goals -= 1
             self.away_goals -= 1

@@ -44,9 +44,11 @@ class Match:
         print("subs", home_subs, away_subs)
         self.home_goals += 15 - max(0, (home_subs - away_subs) * 2)
         self.away_goals += 14 - max(0, (away_subs - home_subs) * 2)
-        while (self.home_goals + self.away_goals) > self.time + 30:
+        while (self.home_goals + self.away_goals) > self.time + 30 and self.home_goals > 4 and self.away_goals > 4:
             self.home_goals -= 1
             self.away_goals -= 1
+        self.home_goals = max(self.home_goals, 4)
+        self.away_goals = max(self.away_goals, 4)
         print(str(self.home_goals) + ":" + str(self.away_goals))
 
         self.time += 30

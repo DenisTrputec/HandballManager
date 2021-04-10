@@ -19,6 +19,26 @@ def new_game(game):
     connection.close()
 
 
+def new_player_statistics(game):
+    db_name = 'save/' + game.name + '.db'
+
+    connection = sqlite3.connect(db_name)
+    cursor = connection.cursor()
+
+    for league in game.leagues:
+        for player_sc in league.players_sc:
+            cursor.execute("INSERT INTO player_statistics" +
+                           " (player_id, competition_id, season, games,"
+                           " attack_rating, attack_minutes, defense_rating, defense_minutes)" +
+                           " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                           (player_sc.player.get_id(), league.get_id(), game.season, player_sc.games,
+                            player_sc.attack_rating, player_sc.attack_minutes,
+                            player_sc.defense_rating, player_sc.defense_minutes))
+
+    connection.commit()
+    connection.close()
+
+
 def insert_match(game):
     db_name = 'save/' + game.name + '.db'
 
@@ -69,28 +89,16 @@ def save_game(game):
                            " AND home_id = " + str(match.home.get_id()) +
                            " AND away_id = " + str(match.away.get_id()))
 
-        for player_sc in game.player_statistics:
-            cursor.execute("SELECT * FROM player_statistics")
-            tuple_list = cursor.fetchall()
-            for t in tuple_list:
-                if player_sc.player.get_id() == t[0] and game.season == t[2]:
-                    cursor.execute("UPDATE player_statistics"
-                                   " SET games=" + str(player_sc.games) +
-                                   ", attack_rating=" + str(player_sc.attack_rating) +
-                                   ", attack_minutes=" + str(player_sc.attack_minutes) +
-                                   ", defense_rating=" + str(player_sc.defense_rating) +
-                                   ", defense_minutes=" + str(player_sc.defense_minutes) +
-                                   " WHERE player_id= " + str(player_sc.player.get_id()) +
-                                   " AND competition_id= " + str(league.get_id()) +
-                                   " AND season=" + str(game.season))
-            else:
-                cursor.execute("INSERT INTO player_statistics" +
-                               " (player_id, competition_id, season, games,"
-                               " attack_rating, attack_minutes, defense_rating, defense_minutes)" +
-                               " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                               (player_sc.player.get_id(), league.get_id(), game.season, player_sc.games,
-                                player_sc.attack_rating, player_sc.attack_minutes,
-                                player_sc.defense_rating, player_sc.defense_minutes))
+    for player_sc in game.player_statistics:
+        cursor.execute("UPDATE player_statistics"
+                       " SET games=" + str(player_sc.games) +
+                       ", attack_rating=" + str(player_sc.attack_rating) +
+                       ", attack_minutes=" + str(player_sc.attack_minutes) +
+                       ", defense_rating=" + str(player_sc.defense_rating) +
+                       ", defense_minutes=" + str(player_sc.defense_minutes) +
+                       " WHERE player_id= " + str(player_sc.player.get_id()) +
+                       " AND competition_id= " + str(player_sc.competition.get_id()) +
+                       " AND season=" + str(game.season))
 
     connection.commit()
     connection.close()

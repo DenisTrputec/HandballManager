@@ -42,6 +42,7 @@ class Match:
         away_subs = len([p for p in away_atk if p not in away_def])
 
         print("subs", home_subs, away_subs)
+        print(str(self.home_goals) + ":" + str(self.away_goals))
         self.home_goals += 15 - max(0, (home_subs - away_subs) * 2)
         self.away_goals += 14 - max(0, (away_subs - home_subs) * 2)
         while (self.home_goals + self.away_goals) > self.time + 30 and self.home_goals > 4 and self.away_goals > 4:
@@ -68,7 +69,6 @@ def play_atk(player_sm):
             player_sm.attack_rating = player_sm.player.attack + 1
         else:
             player_sm.attack_rating = player_sm.player.attack
-        print("ATK", player_sm.player.name, player_sm.attack_rating)
     player_sm.attack_minutes += 15
     return player_sm.attack_rating
 
@@ -82,6 +82,5 @@ def play_def(player_sm):
             player_sm.defense_rating = player_sm.player.defense + 1
         else:
             player_sm.defense_rating = player_sm.player.defense
-        print("DEF", player_sm.player.name, player_sm.defense_rating)
     player_sm.defense_minutes += 15
     return player_sm.defense_rating

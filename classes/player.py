@@ -31,7 +31,7 @@ class Player(Person):
                f"{self.club.name}, Contract: {self.contract_length}, Cost: {self.salary}, Injury: {self.injury_length}"
 
     def generate_injury(self):
-        inj = random.randint(1, 10)
+        inj = random.randint(1, 14)
         while inj == 1:
             self.injury_length += 1
             inj = random.randint(1, 2)

@@ -69,7 +69,13 @@ def save_game(game):
                        ", injury_length=" + str(player.injury_length) +
                        " WHERE person_id = " + str(player.get_id()))
 
+    # Update player_statistics
+    cursor.execute("SELECT * FROM player_statistics")
+    tuple_list = cursor.fetchall()
+    player_sc_database = [t[0] for t in tuple_list]
+
     for league in game.leagues:
+        # Update match
         for match in league.schedule:
             cursor.execute("UPDATE match"
                            " SET time=" + str(match.time) + ", home_goals=" + str(match.home_goals) +
@@ -79,26 +85,20 @@ def save_game(game):
                            " AND home_id = " + str(match.home.get_id()) +
                            " AND away_id = " + str(match.away.get_id()))
 
-    # Update player statistics
-    cursor.execute("SELECT * FROM player_statistics")
-    tuple_list = cursor.fetchall()
-    player_sc_database = [t[0] for t in tuple_list]
-    print(player_sc_database)
-    for player_sc in game.player_statistics:
-        if player_sc.player.get_id() not in player_sc_database:
-            print(player_sc, "NOT IN DB")
-            new_player_statistics(cursor, player_sc, game.season)
-        else:
-            print(player_sc, "IN DB")
-            cursor.execute("UPDATE player_statistics"
-                           " SET games=" + str(player_sc.games) +
-                           ", attack_rating=" + str(player_sc.attack_rating) +
-                           ", attack_minutes=" + str(player_sc.attack_minutes) +
-                           ", defense_rating=" + str(player_sc.defense_rating) +
-                           ", defense_minutes=" + str(player_sc.defense_minutes) +
-                           " WHERE player_id= " + str(player_sc.player.get_id()) +
-                           " AND competition_id= " + str(player_sc.competition.get_id()) +
-                           " AND season=" + str(game.season))
+        # Update player_statistics
+        for player_sc in league.players_sc:
+            if player_sc.player.get_id() not in player_sc_database:
+                new_player_statistics(cursor, player_sc, game.season)
+            else:
+                cursor.execute("UPDATE player_statistics"
+                               " SET games=" + str(player_sc.games) +
+                               ", attack_rating=" + str(player_sc.attack_rating) +
+                               ", attack_minutes=" + str(player_sc.attack_minutes) +
+                               ", defense_rating=" + str(player_sc.defense_rating) +
+                               ", defense_minutes=" + str(player_sc.defense_minutes) +
+                               " WHERE player_id= " + str(player_sc.player.get_id()) +
+                               " AND competition_id= " + str(player_sc.competition.get_id()) +
+                               " AND season=" + str(game.season))
 
     connection.commit()
     connection.close()

@@ -19,24 +19,14 @@ def new_game(game):
     connection.close()
 
 
-def new_player_statistics(game):
-    db_name = 'save/' + game.name + '.db'
-
-    connection = sqlite3.connect(db_name)
-    cursor = connection.cursor()
-
-    for league in game.leagues:
-        for player_sc in league.players_sc:
-            cursor.execute("INSERT INTO player_statistics" +
-                           " (player_id, competition_id, season, games,"
-                           " attack_rating, attack_minutes, defense_rating, defense_minutes)" +
-                           " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                           (player_sc.player.get_id(), league.get_id(), game.season, player_sc.games,
-                            player_sc.attack_rating, player_sc.attack_minutes,
-                            player_sc.defense_rating, player_sc.defense_minutes))
-
-    connection.commit()
-    connection.close()
+def new_player_statistics(cursor, player_sc, game_season):
+    cursor.execute("INSERT INTO player_statistics" +
+                   " (player_id, competition_id, season, games,"
+                   " attack_rating, attack_minutes, defense_rating, defense_minutes)" +
+                   " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                   (player_sc.player.get_id(), player_sc.competition.get_id(), game_season, player_sc.games,
+                    player_sc.attack_rating, player_sc.attack_minutes,
+                    player_sc.defense_rating, player_sc.defense_minutes))
 
 
 def insert_match(game):
@@ -89,16 +79,26 @@ def save_game(game):
                            " AND home_id = " + str(match.home.get_id()) +
                            " AND away_id = " + str(match.away.get_id()))
 
+    # Update player statistics
+    cursor.execute("SELECT * FROM player_statistics")
+    tuple_list = cursor.fetchall()
+    player_sc_database = [t[0] for t in tuple_list]
+    print(player_sc_database)
     for player_sc in game.player_statistics:
-        cursor.execute("UPDATE player_statistics"
-                       " SET games=" + str(player_sc.games) +
-                       ", attack_rating=" + str(player_sc.attack_rating) +
-                       ", attack_minutes=" + str(player_sc.attack_minutes) +
-                       ", defense_rating=" + str(player_sc.defense_rating) +
-                       ", defense_minutes=" + str(player_sc.defense_minutes) +
-                       " WHERE player_id= " + str(player_sc.player.get_id()) +
-                       " AND competition_id= " + str(player_sc.competition.get_id()) +
-                       " AND season=" + str(game.season))
+        if player_sc.player.get_id() not in player_sc_database:
+            print(player_sc, "NOT IN DB")
+            new_player_statistics(cursor, player_sc, game.season)
+        else:
+            print(player_sc, "IN DB")
+            cursor.execute("UPDATE player_statistics"
+                           " SET games=" + str(player_sc.games) +
+                           ", attack_rating=" + str(player_sc.attack_rating) +
+                           ", attack_minutes=" + str(player_sc.attack_minutes) +
+                           ", defense_rating=" + str(player_sc.defense_rating) +
+                           ", defense_minutes=" + str(player_sc.defense_minutes) +
+                           " WHERE player_id= " + str(player_sc.player.get_id()) +
+                           " AND competition_id= " + str(player_sc.competition.get_id()) +
+                           " AND season=" + str(game.season))
 
     connection.commit()
     connection.close()
@@ -145,7 +145,8 @@ def load_game(game):
             if country.get_id() == t[7]:
                 for club in game.clubs:
                     if club.get_id() == t[8]:
-                        game.players.append(Player(t[0], t[1], t[2], t[3], t[4], t[5], t[6], country, club, t[9], t[10], t[11]))
+                        game.players.append(
+                            Player(t[0], t[1], t[2], t[3], t[4], t[5], t[6], country, club, t[9], t[10], t[11]))
 
     cursor.execute("SELECT * FROM team_statistics")
     tuple_list = cursor.fetchall()

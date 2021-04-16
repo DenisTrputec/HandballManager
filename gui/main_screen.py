@@ -1,8 +1,7 @@
-from PyQt5.QtWidgets import QApplication, QTableWidgetItem
-from PyQt5 import uic, QtCore, QtWidgets
-from PyQt5.QtGui import QBrush, QColor
+from PyQt5 import uic, QtWidgets
+from PyQt5.QtWidgets import QTableWidgetItem
 from gui.pre_match import PreMatch
-import sys
+
 
 uiMainScreen = "gui/main_screen.ui"
 formMainScreen, baseMainScreen = uic.loadUiType(uiMainScreen)
@@ -23,6 +22,7 @@ class MainScreen(baseMainScreen, formMainScreen):
         self.cbSchedule.currentTextChanged.connect(self.update_table_schedule)
         self.cbTeam.currentTextChanged.connect(self.update_table_team)
         self.btnNextMatch.clicked.connect(self.next_match)
+        self.actSaveGame.triggered.connect(self.game.save_game)
 
     def fill_combobox_league(self):
         for league in self.game.leagues:

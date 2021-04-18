@@ -7,218 +7,221 @@ from classes.team_statistics import TeamStatistics
 from classes.match import Match
 
 
-def new_game(game):
-    db_name = 'save/' + game.name + '.db'
+class Database:
+    def __init__(self, game_name):
+        self.game_name = game_name
+        self.db_name = "save/" + game_name + ".db"
+        self.connection = None
+        self.cursor = None
 
-    connection = sqlite3.connect(db_name)
-    cursor = connection.cursor()
+    def open_connection(self):
+        self.connection = sqlite3.connect(self.db_name)
+        self.cursor = self.connection.cursor()
 
-    cursor.execute("UPDATE calendar SET game_name='" + game.name + "' WHERE game_name LIKE 'default'")
+    def close_connection(self):
+        self.connection.close()
 
-    connection.commit()
-    connection.close()
+    def commit(self):
+        self.connection.cursor()
 
+    def new_game(self):
+        self.open_connection()
+        self.cursor.execute("UPDATE calendar SET game_name='" + self.game_name + "' WHERE game_name LIKE 'default'")
+        self.close_connection()
 
-def new_player_statistics(cursor, player_sc, game_season):
-    cursor.execute("INSERT INTO player_statistics" +
-                   " (player_id, competition_id, season, games,"
-                   " attack_rating, attack_minutes, defense_rating, defense_minutes)" +
-                   " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                   (player_sc.player.get_id(), player_sc.competition.get_id(), game_season, player_sc.games,
-                    player_sc.attack_rating, player_sc.attack_minutes,
-                    player_sc.defense_rating, player_sc.defense_minutes))
+    def load_game(self, game):
+        self.open_connection()
 
+        self.cursor.execute("SELECT * FROM calendar")
+        tuple_list = self.cursor.fetchall()
+        for t in tuple_list:
+            if game.name == t[0]:
+                game.season = t[1]
+                game.week = t[2]
 
-def insert_match(game):
-    db_name = 'save/' + game.name + '.db'
+        self.cursor.execute("SELECT * FROM country")
+        tuple_list = self.cursor.fetchall()
+        for t in tuple_list:
+            game.countries.append(Country(t[0], t[1], t[2]))
 
-    connection = sqlite3.connect(db_name)
-    cursor = connection.cursor()
+        self.cursor.execute("SELECT * FROM v_league")
+        tuple_list = self.cursor.fetchall()
+        for t in tuple_list:
+            for country in game.countries:
+                if country.get_id() == t[3]:
+                    game.leagues.append(League(t[0], t[1], t[2], country, t[4]))
 
-    for league in game.leagues:
-        for match in league.schedule:
-            cursor.execute("INSERT INTO match" +
-                           " (competition_id, round, home_id, away_id, time, home_goals, away_goals)" +
-                           " VALUES (?, ?, ?, ?, ?, ?, ?)",
-                           (league.get_id(), match.round, match.home.get_id(), match.away.get_id(),
-                            match.time, match.home_goals, match.away_goals))
+        self.cursor.execute("SELECT * FROM v_club")
+        tuple_list = self.cursor.fetchall()
+        for t in tuple_list:
+            for country in game.countries:
+                if country.get_id() == t[2]:
+                    for league in game.leagues:
+                        if league.get_id() == t[3]:
+                            game.clubs.append(Club(t[0], t[1], country, league, t[4]))
 
-    connection.commit()
-    connection.close()
+        self.cursor.execute("SELECT * FROM v_player")
+        tuple_list = self.cursor.fetchall()
+        for t in tuple_list:
+            for country in game.countries:
+                if country.get_id() == t[7]:
+                    for club in game.clubs:
+                        if club.get_id() == t[8]:
+                            game.players.append(
+                                Player(t[0], t[1], t[2], t[3], t[4], t[5], t[6], country, club, t[9], t[10], t[11]))
 
+        self.cursor.execute("SELECT * FROM team_statistics")
+        tuple_list = self.cursor.fetchall()
+        for t in tuple_list:
+            if game.season == t[2]:
+                for league in game.leagues:
+                    if league.get_id() == t[1]:
+                        for club in game.clubs:
+                            if club.get_id() == t[0]:
+                                game.team_statistics.append(TeamStatistics(club, league, t[3], t[4], t[5], t[6], t[7]))
 
-def save_game(game):
-    db_name = 'save/' + game.name + '.db'
+        self.cursor.execute("SELECT * FROM match")
+        tuple_list = self.cursor.fetchall()
+        for t in tuple_list:
+            for league in game.leagues:
+                if league.get_id() == t[0]:
+                    home = None
+                    away = None
+                    for team in game.clubs:
+                        if team.get_id() == t[2]:
+                            home = team
+                        if team.get_id() == t[3]:
+                            away = team
+                    game.schedule.append(Match(league, t[1], home, away, t[4], t[5], t[6]))
 
-    connection = sqlite3.connect(db_name)
-    cursor = connection.cursor()
+        for club in game.clubs:
+            for player in game.players:
+                if club.get_id() == player.club.get_id():
+                    club.players.append(player)
 
-    for club in game.clubs:
-        cursor.execute("UPDATE club"
-                       " SET league_id=" + str(club.league.get_id()) + ", money=" + str(club.money) +
-                       " WHERE team_id = " + str(club.get_id()))
+        for league in game.leagues:
+            for club in game.clubs:
+                if league.get_id() == club.league.get_id():
+                    league.teams.append(club)
+            for club_s in game.team_statistics:
+                if league.get_id() == club_s.league.get_id():
+                    league.standings.append(club_s)
+            for match in game.schedule:
+                if league.get_id() == match.competition.get_id():
+                    league.schedule.append(match)
 
-    for player in game.players:
-        cursor.execute("UPDATE person"
-                       " SET age=" + str(player.age) + ", loyalty=" + str(player.loyalty) +
-                       ", country_id=" + str(player.country.get_id()) + ", club_id=" + str(player.club.get_id()) +
-                       ", contract_length=" + str(player.contract_length) + ", salary=" + str(player.salary) +
-                       " WHERE id = " + str(player.get_id()))
-        cursor.execute("UPDATE player"
-                       " SET attack=" + str(player.attack) + ", defense=" + str(player.defense) +
-                       ", injury_length=" + str(player.injury_length) +
-                       " WHERE person_id = " + str(player.get_id()))
+        self.commit()
+        self.close_connection()
 
-    # Update player_statistics
-    cursor.execute("SELECT * FROM player_statistics")
-    tuple_list = cursor.fetchall()
-    player_sc_database = [t[0] for t in tuple_list]
+    def save_game(self, game):
+        self.open_connection()
 
-    for league in game.leagues:
-        # Update match
-        for match in league.schedule:
-            cursor.execute("UPDATE match"
-                           " SET time=" + str(match.time) + ", home_goals=" + str(match.home_goals) +
-                           ", away_goals=" + str(match.away_goals) +
-                           " WHERE competition_id = " + str(league.get_id()) +
-                           " AND round = " + str(match.round) +
-                           " AND home_id = " + str(match.home.get_id()) +
-                           " AND away_id = " + str(match.away.get_id()))
+        for club in game.clubs:
+            self.cursor.execute("UPDATE club"
+                                " SET league_id=" + str(club.league.get_id()) + ", money=" + str(club.money) +
+                                " WHERE team_id = " + str(club.get_id()))
+
+        for player in game.players:
+            self.cursor.execute("UPDATE person"
+                                " SET age=" + str(player.age) + ", loyalty=" + str(player.loyalty) +
+                                ", country_id=" + str(player.country.get_id()) + ", club_id=" + str(player.club.get_id()) +
+                                ", contract_length=" + str(player.contract_length) + ", salary=" + str(player.salary) +
+                                " WHERE id = " + str(player.get_id()))
+            self.cursor.execute("UPDATE player"
+                                " SET attack=" + str(player.attack) + ", defense=" + str(player.defense) +
+                                ", injury_length=" + str(player.injury_length) +
+                                " WHERE person_id = " + str(player.get_id()))
 
         # Update player_statistics
-        for player_sc in league.players_sc:
-            if player_sc.player.get_id() not in player_sc_database:
-                new_player_statistics(cursor, player_sc, game.season)
-            else:
-                cursor.execute("UPDATE player_statistics"
-                               " SET games=" + str(player_sc.games) +
-                               ", attack_rating=" + str(player_sc.attack_rating) +
-                               ", attack_minutes=" + str(player_sc.attack_minutes) +
-                               ", defense_rating=" + str(player_sc.defense_rating) +
-                               ", defense_minutes=" + str(player_sc.defense_minutes) +
-                               " WHERE player_id= " + str(player_sc.player.get_id()) +
-                               " AND competition_id= " + str(player_sc.competition.get_id()) +
-                               " AND season=" + str(game.season))
+        self.cursor.execute("SELECT * FROM player_statistics")
+        tuple_list = self.cursor.fetchall()
+        player_sc_database = [t[0] for t in tuple_list]
 
-    connection.commit()
-    connection.close()
+        for league in game.leagues:
+            # Update match
+            for match in league.schedule:
+                self.cursor.execute("UPDATE match"
+                                    " SET time=" + str(match.time) + ", home_goals=" + str(match.home_goals) +
+                                    ", away_goals=" + str(match.away_goals) +
+                                    " WHERE competition_id = " + str(league.get_id()) +
+                                    " AND round = " + str(match.round) +
+                                    " AND home_id = " + str(match.home.get_id()) +
+                                    " AND away_id = " + str(match.away.get_id()))
 
+            # Update player_statistics
+            for player_sc in league.players_sc:
+                if player_sc.player.get_id() not in player_sc_database:
+                    self.insert_player_statistics(player_sc, game.season)
+                else:
+                    self.update_player_statistics(player_sc, game.season)
 
-def load_game(game):
-    db_name = 'save/' + game.name + '.db'
+        self.commit()
+        self.close_connection()
 
-    connection = sqlite3.connect(db_name)
-    cursor = connection.cursor()
+    def insert_player_statistics(self, player_sc, game_season):
+        self.cursor.execute("INSERT INTO player_statistics" +
+                            " (player_id, competition_id, season, games,"
+                            " attack_rating, attack_minutes, defense_rating, defense_minutes)" +
+                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                            (player_sc.player.get_id(), player_sc.competition.get_id(), game_season, player_sc.games,
+                             player_sc.attack_rating, player_sc.attack_minutes,
+                             player_sc.defense_rating, player_sc.defense_minutes))
 
-    cursor.execute("SELECT * FROM calendar")
-    tuple_list = cursor.fetchall()
-    for t in tuple_list:
-        if game.name == t[0]:
-            game.season = t[1]
-            game.week = t[2]
+    def update_player_statistics(self, player_sc, game):
+        self.cursor.execute("UPDATE player_statistics"
+                            " SET games=" + str(player_sc.games) +
+                            ", attack_rating=" + str(player_sc.attack_rating) +
+                            ", attack_minutes=" + str(player_sc.attack_minutes) +
+                            ", defense_rating=" + str(player_sc.defense_rating) +
+                            ", defense_minutes=" + str(player_sc.defense_minutes) +
+                            " WHERE player_id= " + str(player_sc.player.get_id()) +
+                            " AND competition_id= " + str(player_sc.competition.get_id()) +
+                            " AND season=" + str(game.season))
 
-    cursor.execute("SELECT * FROM country")
-    tuple_list = cursor.fetchall()
-    for t in tuple_list:
-        game.countries.append(Country(t[0], t[1], t[2]))
+    def insert_match(self, game):
+        self.open_connection()
 
-    cursor.execute("SELECT * FROM v_league")
-    tuple_list = cursor.fetchall()
-    for t in tuple_list:
-        for country in game.countries:
-            if country.get_id() == t[3]:
-                game.leagues.append(League(t[0], t[1], t[2], country, t[4]))
+        for league in game.leagues:
+            for match in league.schedule:
+                self.cursor.execute("INSERT INTO match" +
+                                    " (competition_id, round, home_id, away_id, time, home_goals, away_goals)" +
+                                    " VALUES (?, ?, ?, ?, ?, ?, ?)",
+                                    (league.get_id(), match.round, match.home.get_id(), match.away.get_id(),
+                                     match.time, match.home_goals, match.away_goals))
 
-    cursor.execute("SELECT * FROM v_club")
-    tuple_list = cursor.fetchall()
-    for t in tuple_list:
-        for country in game.countries:
-            if country.get_id() == t[2]:
-                for league in game.leagues:
-                    if league.get_id() == t[3]:
-                        game.clubs.append(Club(t[0], t[1], country, league, t[4]))
+        self.commit()
+        self.close_connection()
 
-    cursor.execute("SELECT * FROM v_player")
-    tuple_list = cursor.fetchall()
-    for t in tuple_list:
-        for country in game.countries:
-            if country.get_id() == t[7]:
-                for club in game.clubs:
-                    if club.get_id() == t[8]:
-                        game.players.append(
-                            Player(t[0], t[1], t[2], t[3], t[4], t[5], t[6], country, club, t[9], t[10], t[11]))
+    def load_schedule(self, game):
+        self.open_connection()
 
-    cursor.execute("SELECT * FROM team_statistics")
-    tuple_list = cursor.fetchall()
-    for t in tuple_list:
-        if game.season == t[2]:
+        self.cursor.execute("SELECT * FROM match")
+        tuple_list = self.cursor.fetchall()
+        for t in tuple_list:
             for league in game.leagues:
-                if league.get_id() == t[1]:
-                    for club in game.clubs:
-                        if club.get_id() == t[0]:
-                            game.team_statistics.append(TeamStatistics(club, league, t[3], t[4], t[5], t[6], t[7]))
+                if league.get_id() == t[0]:
+                    home = None
+                    away = None
+                    for team in game.clubs:
+                        if team.get_id() == t[2]:
+                            home = team
+                        if team.get_id() == t[3]:
+                            away = team
+                    game.schedule.append(Match(league, t[1], home, away, t[4], t[5], t[6]))
 
-    cursor.execute("SELECT * FROM match")
-    tuple_list = cursor.fetchall()
-    for t in tuple_list:
         for league in game.leagues:
-            if league.get_id() == t[0]:
-                home = None
-                away = None
-                for team in game.clubs:
-                    if team.get_id() == t[2]:
-                        home = team
-                    if team.get_id() == t[3]:
-                        away = team
-                game.schedule.append(Match(league, t[1], home, away, t[4], t[5], t[6]))
+            for match in game.schedule:
+                if league.get_id() == match.competition.get_id():
+                    league.schedule.append(match)
 
-    for club in game.clubs:
-        for player in game.players:
-            if club.get_id() == player.club.get_id():
-                club.players.append(player)
-
-    for league in game.leagues:
-        for club in game.clubs:
-            if league.get_id() == club.league.get_id():
-                league.teams.append(club)
-        for club_s in game.team_statistics:
-            if league.get_id() == club_s.league.get_id():
-                league.standings.append(club_s)
-        for match in game.schedule:
-            if league.get_id() == match.competition.get_id():
-                league.schedule.append(match)
-
-    connection.commit()
-    connection.close()
+        self.commit()
+        self.close_connection()
 
 
-def load_schedule(game):
-    db_name = 'save/' + game.name + '.db'
 
-    connection = sqlite3.connect(db_name)
-    cursor = connection.cursor()
 
-    cursor.execute("SELECT * FROM match")
-    tuple_list = cursor.fetchall()
-    for t in tuple_list:
-        for league in game.leagues:
-            if league.get_id() == t[0]:
-                home = None
-                away = None
-                for team in game.clubs:
-                    if team.get_id() == t[2]:
-                        home = team
-                    if team.get_id() == t[3]:
-                        away = team
-                game.schedule.append(Match(league, t[1], home, away, t[4], t[5], t[6]))
 
-    for league in game.leagues:
-        for match in game.schedule:
-            if league.get_id() == match.competition.get_id():
-                league.schedule.append(match)
 
-    connection.commit()
-    connection.close()
 
 # def new_players():
 #     db_name = 'D:\Programiranje\Moje aplikacije\Python\HandballManager\database\default.db'

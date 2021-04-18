@@ -1,6 +1,5 @@
 import shutil
-import os
-import classes.database as db
+from classes.database import Database
 
 
 class Game:
@@ -17,8 +16,9 @@ class Game:
 
     def new_game(self, save_name):
         self.name = save_name
+        db = Database(save_name)
         shutil.copy2("database/default.db", "save/" + save_name + ".db")
-        db.new_game(self)
+        db.new_game()
         db.load_game(self)
         for league in self.leagues:
             league.create_schedule()
@@ -26,8 +26,10 @@ class Game:
         db.load_schedule(self)
 
     def save_game(self):
+        db = Database(self.name)
         db.save_game(self)
 
     def load_game(self, save_name):
         self.name = save_name
+        db = Database(save_name)
         db.load_game(self)

@@ -148,6 +148,10 @@ class Database:
                                     " AND home_id = " + str(match.home.get_id()) +
                                     " AND away_id = " + str(match.away.get_id()))
 
+            # Update team_statistics
+            for team_s in league.standings:
+                self.update_team_statistics(team_s, game)
+
             # Update player_statistics
             for player_sc in league.players_sc:
                 if player_sc.player.get_id() not in player_sc_database:
@@ -157,6 +161,17 @@ class Database:
 
         self.commit()
         self.close_connection()
+
+    def update_team_statistics(self, team_s, game):
+        self.cursor.execute("UPDATE team_statistics"
+                            " SET won=" + str(team_s.won) +
+                            ", drawn=" + str(team_s.drawn) +
+                            ", lost=" + str(team_s.lost) +
+                            ", goals_for=" + str(team_s.goals_for) +
+                            ", goals_away=" + str(team_s.goals_away) +
+                            " WHERE team_id= " + str(team_s.player.get_id()) +
+                            " AND competition_id= " + str(team_s.competition.get_id()) +
+                            " AND season=" + str(game.season))
 
     def insert_player_statistics(self, player_sc, game_season):
         self.cursor.execute("INSERT INTO player_statistics" +

@@ -22,11 +22,22 @@ class Database:
         self.connection.close()
 
     def commit(self):
-        self.connection.cursor()
+        self.connection.commit()
 
-    def new_game(self):
+    def new_game(self, game):
         self.open_connection()
-        self.cursor.execute("UPDATE calendar SET game_name='" + self.game_name + "' WHERE game_name LIKE 'default'")
+        self.update_calendar(game)
+        self.commit()
+        self.close_connection()
+
+        self.load_game(game)
+
+        self.open_connection()
+        for league in game.leagues:
+            league.create_schedule()
+        self.insert_match(game)
+        self.load_schedule(game)
+        self.commit()
         self.close_connection()
 
     def load_game(self, game):
@@ -167,7 +178,7 @@ class Database:
                             "SET game_name='" + game.name +
                             "', season=" + str(game.season) +
                             ", week=" + str(game.week) +
-                            "WHERE game_name='default' OR game_name='" + game.name + "'")
+                            " WHERE game_name LIKE 'default' OR game_name LIKE '" + game.name + "'")
 
     def insert_team_statistics(self, team_s, game_season):
         self.cursor.execute("INSERT INTO team_statistics" +
@@ -208,8 +219,6 @@ class Database:
                             " AND season=" + str(game.season))
 
     def insert_match(self, game):
-        self.open_connection()
-
         for league in game.leagues:
             for match in league.schedule:
                 self.cursor.execute("INSERT INTO match" +
@@ -218,12 +227,8 @@ class Database:
                                     (league.get_id(), match.round, match.home.get_id(), match.away.get_id(),
                                      match.time, match.home_goals, match.away_goals))
 
-        self.commit()
-        self.close_connection()
 
     def load_schedule(self, game):
-        self.open_connection()
-
         self.cursor.execute("SELECT * FROM match")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
@@ -242,11 +247,6 @@ class Database:
             for match in game.schedule:
                 if league.get_id() == match.competition.get_id():
                     league.schedule.append(match)
-
-        self.commit()
-        self.close_connection()
-
-
 
 
 

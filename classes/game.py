@@ -18,12 +18,7 @@ class Game:
         self.name = save_name
         db = Database(save_name)
         shutil.copy2("database/default.db", "save/" + save_name + ".db")
-        db.new_game()
-        db.load_game(self)
-        for league in self.leagues:
-            league.create_schedule()
-        db.insert_match(self)
-        db.load_schedule(self)
+        db.new_game(self)
 
     def save_game(self):
         db = Database(self.name)

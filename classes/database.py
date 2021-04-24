@@ -124,7 +124,7 @@ class Database:
         for player in game.players:
             self.cursor.execute("UPDATE person"
                                 " SET age=" + str(player.age) + ", loyalty=" + str(player.loyalty) +
-                                ", country_id=" + str(player.country.get_id()) + ", club_id=" + str(player.club.get_id()) +
+                                ", country_id=" + str(player.country.get_id()) + ", club_id=" + str(player.team.get_id()) +
                                 ", contract_length=" + str(player.contract_length) + ", salary=" + str(player.salary) +
                                 " WHERE id = " + str(player.get_id()))
             self.cursor.execute("UPDATE player"
@@ -162,6 +162,20 @@ class Database:
         self.commit()
         self.close_connection()
 
+    def update_calendar(self, game):
+        self.cursor.execute("UPDATE calendar "
+                            "SET game_name='" + game.name +
+                            "', season=" + str(game.season) +
+                            ", week=" + str(game.week) +
+                            "WHERE game_name='default' OR game_name='" + game.name + "'")
+
+    def insert_team_statistics(self, team_s, game_season):
+        self.cursor.execute("INSERT INTO team_statistics" +
+                            " (team_id, competition_id, season, won, drawn, lost, goals_for, goals_away)" +
+                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                            (team_s.team.get_id(), team_s.competition.get_id(), game_season, team_s.won,
+                             team_s.drawn, team_s.lost, team_s.goals_for, team_s.goals_away))
+
     def update_team_statistics(self, team_s, game):
         self.cursor.execute("UPDATE team_statistics"
                             " SET won=" + str(team_s.won) +
@@ -169,7 +183,7 @@ class Database:
                             ", lost=" + str(team_s.lost) +
                             ", goals_for=" + str(team_s.goals_for) +
                             ", goals_away=" + str(team_s.goals_away) +
-                            " WHERE team_id= " + str(team_s.player.get_id()) +
+                            " WHERE team_id= " + str(team_s.team.get_id()) +
                             " AND competition_id= " + str(team_s.competition.get_id()) +
                             " AND season=" + str(game.season))
 

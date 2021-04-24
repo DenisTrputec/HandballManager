@@ -1,6 +1,6 @@
 class TeamStatistics:
-    def __init__(self, club, league, won=0, drawn=0, lost=0, gf=0, ga=0):
-        self.club = club
+    def __init__(self, team, league, won=0, drawn=0, lost=0, gf=0, ga=0):
+        self.team = team
         self.league = league
         self.won = won
         self.drawn = drawn
@@ -9,7 +9,7 @@ class TeamStatistics:
         self.goals_away = ga
 
     def __str__(self):
-        return f"Club: {self.club.name}, League: {self.league.short_name}, W:{self.won} D:{self.drawn} L:{self.lost} " \
+        return f"Club: {self.team.name}, League: {self.league.short_name}, W:{self.won} D:{self.drawn} L:{self.lost} " \
                f"GF:{self.goals_for} GA:{self.goals_away} "
 
     def played(self):

@@ -37,7 +37,7 @@ class League(Competition):
     def save_match_result(self, match):
         for team_s in self.standings:
 
-            if team_s.club.name == match.home.name:
+            if team_s.team.name == match.home.name:
                 if match.home_goals > match.away_goals:
                     team_s.won += 1
                 elif match.home_goals < match.away_goals:
@@ -45,7 +45,7 @@ class League(Competition):
                 team_s.goals_for += match.home_goals
                 team_s.goals_away += match.away_goals
 
-            if team_s.club.name == match.away.name:
+            if team_s.team.name == match.away.name:
                 if match.home_goals > match.away_goals:
                     team_s.lost += 1
                 elif match.home_goals < match.away_goals:

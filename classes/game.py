@@ -5,8 +5,8 @@ from classes.database import Database
 class Game:
     def __init__(self):
         self.name = None
-        self.season = 0
-        self.week = 0
+        self.season = 1
+        self.week = 1
         self.countries = []
         self.leagues = []
         self.clubs = []

@@ -37,7 +37,7 @@ class MainScreen(baseMainScreen, formMainScreen):
 
                 self.tblLeague.setRowCount(len(league.standings))
                 for row, team_s in enumerate(league.standings):
-                    self.tblLeague.setItem(row, 0, QTableWidgetItem(team_s.club.name))
+                    self.tblLeague.setItem(row, 0, QTableWidgetItem(team_s.team.name))
                     self.tblLeague.setItem(row, 1, QTableWidgetItem(str(team_s.played())))
                     self.tblLeague.setItem(row, 2, QTableWidgetItem(str(team_s.won)))
                     self.tblLeague.setItem(row, 3, QTableWidgetItem(str(team_s.drawn)))
@@ -61,8 +61,11 @@ class MainScreen(baseMainScreen, formMainScreen):
 
     def update_combobox_team(self, league):
         self.cbTeam.clear()
-        for team in league.teams:
-            self.cbTeam.addItem(team.name)
+        for team_sc in league.standings:
+            for team in league.teams:
+                if team_sc.team == team:
+                    self.cbTeam.addItem(team.name)
+                    break
         self.update_table_team()
 
     def update_table_team(self):
@@ -74,7 +77,7 @@ class MainScreen(baseMainScreen, formMainScreen):
                         self.tblTeam.setRowCount(len(club.players))
                 row = 0
                 for player_sc in league.players_sc:
-                    if player_sc.player.club.name == self.cbTeam.currentText():
+                    if player_sc.player.team.name == self.cbTeam.currentText():
                         print(player_sc)
                         self.tblTeam.setItem(row, 0, QTableWidgetItem(player_sc.player.name))
                         self.tblTeam.setItem(row, 1, QTableWidgetItem(str(player_sc.player.age)))

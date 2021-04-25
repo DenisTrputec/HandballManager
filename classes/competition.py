@@ -29,6 +29,11 @@ class Competition:
                     player_sc.defense_minutes += player_sm.defense_minutes
                     break
             else:
-                self.players_sc.append(PlayerStatisticsCompetition(player_sm.player, self, 1, player_sm.attack_rating,
+                player_sc = PlayerStatisticsCompetition(player_sm.player, self, 1, player_sm.attack_rating,
                                                                    player_sm.attack_minutes, player_sm.defense_rating,
-                                                                   player_sm.defense_minutes))
+                                                                   player_sm.defense_minutes)
+                print(player_sc.player.name)
+                self.players_sc.append(player_sc)
+                # self.players_sc.append(PlayerStatisticsCompetition(player_sm.player, self, 1, player_sm.attack_rating,
+                #                                                    player_sm.attack_minutes, player_sm.defense_rating,
+                #                                                    player_sm.defense_minutes))

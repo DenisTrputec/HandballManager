@@ -8,5 +8,5 @@ class PlayerStatistics:
         self.defense_minutes = def_min
 
     def __str__(self):
-        return f"Player: {self.player.name}, Games: {self.games}, AtkRat:{self.attack_rating}, AtkMin:{self.attack_minutes}, " \
-               f"DefRat:{self.defense_rating}, DefMin:{self.defense_minutes}"
+        return f"Player: {self.player.name}, Games: {self.games}, AtkRat:{self.attack_rating}, " \
+               f"AtkMin:{self.attack_minutes}, DefRat:{self.defense_rating}, DefMin:{self.defense_minutes}"

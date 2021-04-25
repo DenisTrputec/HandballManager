@@ -25,13 +25,18 @@ class MainScreen(baseMainScreen, formMainScreen):
         self.actSaveGame.triggered.connect(self.game.save_game)
 
     def fill_combobox_league(self):
+        print("fill_combobox_league")
         for league in self.game.leagues:
             self.cbLeague.addItem(league.name)
+        print("fill_combobox_league executed")
 
     def update_table_league(self):
+        print("update_table_league")
         for league in self.game.leagues:
             if league.name == self.cbLeague.currentText():
+                print("->update_combobox_team")
                 self.update_combobox_team(league)
+                print("->update_combobox_schedule")
                 self.update_combobox_schedule(league)
                 league.standings.sort(key=lambda x: [x.points(), x.goal_diff(), x.goals_for], reverse=True)
 
@@ -58,27 +63,38 @@ class MainScreen(baseMainScreen, formMainScreen):
                 header.setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
                 header.setSectionResizeMode(8, QtWidgets.QHeaderView.ResizeToContents)
                 break
+        print("update_table_league executed")
 
     def update_combobox_team(self, league):
+        print("update_combobox_team, arg", league.name)
         self.cbTeam.clear()
         for team_sc in league.standings:
             for team in league.teams:
                 if team_sc.team == team:
+                    print("update_combobox_team", team.name)
                     self.cbTeam.addItem(team.name)
                     break
+        print("->update_table_team")
         self.update_table_team()
+        print("update_combobox_team executed")
 
     def update_table_team(self):
+        print("update_table_team")
+        if self.cbTeam.count() == 0:
+            return
         self.tblTeam.setRowCount(0)
         for league in self.game.leagues:
+            print(11, league.name, self.cbLeague.currentText(), self.cbTeam.count())
             if league.name == self.cbLeague.currentText():
                 for club in league.teams:
+                    print(12, self.cbTeam.currentText())
                     if self.cbTeam.currentText() == club.name:
+                        print(13)
                         self.tblTeam.setRowCount(len(club.players))
+                        break
                 row = 0
                 for player_sc in league.players_sc:
-                    if player_sc.player.team.name == self.cbTeam.currentText():
-                        print(player_sc)
+                    if player_sc.player.club.name == self.cbTeam.currentText():
                         self.tblTeam.setItem(row, 0, QTableWidgetItem(player_sc.player.name))
                         self.tblTeam.setItem(row, 1, QTableWidgetItem(str(player_sc.player.age)))
                         self.tblTeam.setItem(row, 2, QTableWidgetItem(player_sc.player.position.name))
@@ -101,8 +117,11 @@ class MainScreen(baseMainScreen, formMainScreen):
                     header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
                     header.setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
                     break
+                break
+        print("update_table_team executed")
 
     def update_combobox_schedule(self, league):
+        print("update_table_team")
         self.cbSchedule.clear()
         for i in range(len(league.schedule) // len(league.teams) * 2):
             self.cbSchedule.addItem("Round " + str(i + 1))
@@ -118,9 +137,12 @@ class MainScreen(baseMainScreen, formMainScreen):
                     break
             else:
                 cnt = 0
+        print("->update_table_schedule")
         self.update_table_schedule()
+        print("update_table_team executed")
 
     def update_table_schedule(self):
+        print("update_table_schedule")
         for league in self.game.leagues:
             if league.name == self.cbLeague.currentText():
                 self.tblSchedule.setRowCount(len(league.teams) // 2)
@@ -142,6 +164,7 @@ class MainScreen(baseMainScreen, formMainScreen):
                 header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
                 header.setSectionResizeMode(2, QtWidgets.QHeaderView.Stretch)
                 break
+        print("update_table_schedule executed")
 
     def next_match(self):
         self.game.schedule.sort(key=lambda x: [x.round, x.competition.get_id()])

@@ -129,19 +129,19 @@ class Database:
 
         for club in game.clubs:
             self.cursor.execute("UPDATE club"
-                                " SET league_id=" + str(club.league.get_id()) + ", money=" + str(club.money) +
+                                " SET league_id=" + str(club.league.get_id()) +
+                                ", money=" + str(club.money) +
                                 " WHERE team_id = " + str(club.get_id()))
 
+        # Update player
+        self.cursor.execute("SELECT * FROM v_player")
+        tuple_list = self.cursor.fetchall()
+        player_database = [t[0] for t in tuple_list]
         for player in game.players:
-            self.cursor.execute("UPDATE person"
-                                " SET age=" + str(player.age) + ", loyalty=" + str(player.loyalty) +
-                                ", country_id=" + str(player.country.get_id()) + ", club_id=" + str(player.team.get_id()) +
-                                ", contract_length=" + str(player.contract_length) + ", salary=" + str(player.salary) +
-                                " WHERE id = " + str(player.get_id()))
-            self.cursor.execute("UPDATE player"
-                                " SET attack=" + str(player.attack) + ", defense=" + str(player.defense) +
-                                ", injury_length=" + str(player.injury_length) +
-                                " WHERE person_id = " + str(player.get_id()))
+            if player not in player_database:
+                self.insert_player(player)
+            else:
+                self.update_player(player)
 
         # Update player_statistics
         self.cursor.execute("SELECT * FROM player_statistics")
@@ -179,6 +179,32 @@ class Database:
                             "', season=" + str(game.season) +
                             ", week=" + str(game.week) +
                             " WHERE game_name LIKE 'default' OR game_name LIKE '" + game.name + "'")
+
+    def insert_player(self, player):
+        self.cursor.execute("INSERT INTO person"
+                            " SET name='" + player.name +
+                            "', age=" + str(player.age) +
+                            ", loyalty=" + str(player.loyalty) +
+                            ", country_id=" + str(player.country.get_id()) +
+                            ", club_id=" + str(player.team.get_id()) +
+                            ", contract_length=" + str(player.contract_length) +
+                            ", salary=" + str(player.salary))
+        self.cursor.execute("INSERT INTO player"
+                            " SET position_id=" + str(player.position.value) +
+                            ", attack=" + str(player.attack) +
+                            ", defense=" + str(player.defense) +
+                            ", injury_length=" + str(player.injury_length))
+
+    def update_player(self, player):
+        self.cursor.execute("UPDATE person"
+                            " SET age=" + str(player.age) + ", loyalty=" + str(player.loyalty) +
+                            ", country_id=" + str(player.country.get_id()) + ", club_id=" + str(player.team.get_id()) +
+                            ", contract_length=" + str(player.contract_length) + ", salary=" + str(player.salary) +
+                            " WHERE id = " + str(player.get_id()))
+        self.cursor.execute("UPDATE player"
+                            " SET attack=" + str(player.attack) + ", defense=" + str(player.defense) +
+                            ", injury_length=" + str(player.injury_length) +
+                            " WHERE person_id = " + str(player.get_id()))
 
     def insert_team_statistics(self, team_s, game_season):
         self.cursor.execute("INSERT INTO team_statistics" +
@@ -226,7 +252,6 @@ class Database:
                                     " VALUES (?, ?, ?, ?, ?, ?, ?)",
                                     (league.get_id(), match.round, match.home.get_id(), match.away.get_id(),
                                      match.time, match.home_goals, match.away_goals))
-
 
     def load_schedule(self, game):
         self.cursor.execute("SELECT * FROM match")

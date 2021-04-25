@@ -1,5 +1,6 @@
 import sys
 import os
+import logging
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog
 from PyQt5 import uic
 from classes.game import Game
@@ -7,7 +8,6 @@ from classes.match import Match
 from gui.dialog_new_game import DialogNewGame
 from gui.main_screen import MainScreen
 from gui.pre_match import PreMatch
-
 
 # Load ui files
 uiMainWindow = "gui/start_screen.ui"
@@ -42,6 +42,11 @@ class MainWindow(baseMainWindow, formMainWindow):
 
 
 if __name__ == "__main__":
+    log_file = "debug.log"
+    if os.path.exists(log_file):
+        os.remove(log_file)
+    logging.basicConfig(filename=log_file, level=logging.DEBUG)
+    logging.info("Game started")
     app = QApplication(sys.argv)
     main_window = MainWindow()
     main_window.show()

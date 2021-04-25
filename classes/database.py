@@ -1,9 +1,11 @@
 import sqlite3
+import logging
 from classes.country import Country
 from classes.league import League
 from classes.club import Club
 from classes.player import Player
 from classes.team_statistics import TeamStatistics
+from classes.player_statistics_competition import PlayerStatisticsCompetition
 from classes.match import Match
 
 
@@ -41,8 +43,11 @@ class Database:
         self.close_connection()
 
     def load_game(self, game):
+        logging.debug("Database.load_game()")
+        logging.info("Database.open_connection()")
         self.open_connection()
 
+        logging.info("SELECT * FROM calendar")
         self.cursor.execute("SELECT * FROM calendar")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
@@ -50,11 +55,13 @@ class Database:
                 game.season = t[1]
                 game.week = t[2]
 
+        logging.info("SELECT * FROM country")
         self.cursor.execute("SELECT * FROM country")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
             game.countries.append(Country(t[0], t[1], t[2]))
 
+        logging.info("SELECT * FROM v_league")
         self.cursor.execute("SELECT * FROM v_league")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
@@ -62,6 +69,7 @@ class Database:
                 if country.get_id() == t[3]:
                     game.leagues.append(League(t[0], t[1], t[2], country, t[4]))
 
+        logging.info("SELECT * FROM v_club")
         self.cursor.execute("SELECT * FROM v_club")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
@@ -71,6 +79,7 @@ class Database:
                         if league.get_id() == t[3]:
                             game.clubs.append(Club(t[0], t[1], country, league, t[4]))
 
+        logging.info("SELECT * FROM v_player")
         self.cursor.execute("SELECT * FROM v_player")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
@@ -81,6 +90,7 @@ class Database:
                             game.players.append(
                                 Player(t[0], t[1], t[2], t[3], t[4], t[5], t[6], country, club, t[9], t[10], t[11]))
 
+        logging.info("SELECT * FROM team_statistics")
         self.cursor.execute("SELECT * FROM team_statistics")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
@@ -91,6 +101,18 @@ class Database:
                             if club.get_id() == t[0]:
                                 game.team_statistics.append(TeamStatistics(club, league, t[3], t[4], t[5], t[6], t[7]))
 
+        logging.info("SELECT * FROM player_statistics")
+        self.cursor.execute("SELECT * FROM player_statistics")
+        tuple_list = self.cursor.fetchall()
+        for t in tuple_list:
+            if game.season == t[2]:
+                for league in game.leagues:
+                    if league.get_id() == t[1]:
+                        for player in game.players:
+                            if player.get_id() == t[0]:
+                                league.players_sc.append(PlayerStatisticsCompetition(player, league, t[3], t[4], t[5], t[6]))
+
+        logging.info("SELECT * FROM match")
         self.cursor.execute("SELECT * FROM match")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
@@ -105,11 +127,13 @@ class Database:
                             away = team
                     game.schedule.append(Match(league, t[1], home, away, t[4], t[5], t[6]))
 
+        logging.info("Append players to clubs")
         for club in game.clubs:
             for player in game.players:
                 if club.get_id() == player.club.get_id():
                     club.players.append(player)
 
+        logging.info("Append clubs to leagues and matches to leagues schedules")
         for league in game.leagues:
             for club in game.clubs:
                 if league.get_id() == club.league.get_id():
@@ -123,6 +147,7 @@ class Database:
 
         self.commit()
         self.close_connection()
+        logging.debug("Database.load_game() Executed")
 
     def save_game(self, game):
         print("\n\nDatabase.save_game()\nopen_connection")

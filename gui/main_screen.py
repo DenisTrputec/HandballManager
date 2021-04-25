@@ -84,12 +84,9 @@ class MainScreen(baseMainScreen, formMainScreen):
             return
         self.tblTeam.setRowCount(0)
         for league in self.game.leagues:
-            print(11, league.name, self.cbLeague.currentText(), self.cbTeam.count())
             if league.name == self.cbLeague.currentText():
                 for club in league.teams:
-                    print(12, self.cbTeam.currentText())
                     if self.cbTeam.currentText() == club.name:
-                        print(13)
                         self.tblTeam.setRowCount(len(club.players))
                         break
                 row = 0

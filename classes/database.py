@@ -125,50 +125,66 @@ class Database:
         self.close_connection()
 
     def save_game(self, game):
+        print("\n\nDatabase.save_game()\nopen_connection")
         self.open_connection()
 
-        for club in game.clubs:
-            self.cursor.execute("UPDATE club"
-                                " SET league_id=" + str(club.league.get_id()) +
-                                ", money=" + str(club.money) +
-                                " WHERE team_id = " + str(club.get_id()))
+        # Update table calendar
+        print("update_calendar")
+        self.update_calendar(game)
 
-        # Update player
+        # Update table club
+        print("update_club")
+        self.update_club(game)
+
+        # Update tables person and player
         self.cursor.execute("SELECT * FROM v_player")
         tuple_list = self.cursor.fetchall()
         player_database = [t[0] for t in tuple_list]
         for player in game.players:
-            if player not in player_database:
+            if player.get_id() not in player_database:
+                print("insert_player")
                 self.insert_player(player)
             else:
+                print("update_player")
                 self.update_player(player)
 
-        # Update player_statistics
+        # Update table player_statistics part 1
         self.cursor.execute("SELECT * FROM player_statistics")
         tuple_list = self.cursor.fetchall()
-        player_sc_database = [t[0] for t in tuple_list]
+        player_s_database = [t[0] for t in tuple_list]
+
+        # Update table team_statistics part 1
+        self.cursor.execute("SELECT * FROM team_statistics")
+        tuple_list = self.cursor.fetchall()
+        team_s_database = [t[0] for t in tuple_list]
+
+        # Update table match part 1
+        self.cursor.execute("SELECT * FROM match")
+        tuple_list = self.cursor.fetchall()
+        match_database = [(t[0], t[1], t[2], t[3]) for t in tuple_list]
 
         for league in game.leagues:
-            # Update match
-            for match in league.schedule:
-                self.cursor.execute("UPDATE match"
-                                    " SET time=" + str(match.time) + ", home_goals=" + str(match.home_goals) +
-                                    ", away_goals=" + str(match.away_goals) +
-                                    " WHERE competition_id = " + str(league.get_id()) +
-                                    " AND round = " + str(match.round) +
-                                    " AND home_id = " + str(match.home.get_id()) +
-                                    " AND away_id = " + str(match.away.get_id()))
-
-            # Update team_statistics
-            for team_s in league.standings:
-                self.update_team_statistics(team_s, game)
-
-            # Update player_statistics
+            # Update table player_statistics part 2
             for player_sc in league.players_sc:
-                if player_sc.player.get_id() not in player_sc_database:
+                if player_sc.player.get_id() not in player_s_database:
+                    print("insert_player_statistics")
                     self.insert_player_statistics(player_sc, game.season)
                 else:
-                    self.update_player_statistics(player_sc, game.season)
+                    print("update_player_statistics")
+                    self.update_player_statistics(player_sc, game)
+
+            # Update table team_statistics part 2
+            for team_sc in league.standings:
+                if team_sc.team.get_id() not in team_s_database:
+                    print("insert_team_statistics")
+                    self.insert_team_statistics(team_sc, game.season)
+                else:
+                    print("update_team_statistics")
+                    self.update_team_statistics(team_sc, game)
+
+            # Update table match
+            print("update_match")
+            self.update_match(league)
 
         self.commit()
         self.close_connection()
@@ -179,6 +195,13 @@ class Database:
                             "', season=" + str(game.season) +
                             ", week=" + str(game.week) +
                             " WHERE game_name LIKE 'default' OR game_name LIKE '" + game.name + "'")
+
+    def update_club(self, game):
+        for club in game.clubs:
+            self.cursor.execute("UPDATE club"
+                                " SET league_id=" + str(club.league.get_id()) +
+                                ", money=" + str(club.money) +
+                                " WHERE team_id = " + str(club.get_id()))
 
     def insert_player(self, player):
         self.cursor.execute("INSERT INTO person"
@@ -198,7 +221,7 @@ class Database:
     def update_player(self, player):
         self.cursor.execute("UPDATE person"
                             " SET age=" + str(player.age) + ", loyalty=" + str(player.loyalty) +
-                            ", country_id=" + str(player.country.get_id()) + ", club_id=" + str(player.team.get_id()) +
+                            ", country_id=" + str(player.country.get_id()) + ", club_id=" + str(player.club.get_id()) +
                             ", contract_length=" + str(player.contract_length) + ", salary=" + str(player.salary) +
                             " WHERE id = " + str(player.get_id()))
         self.cursor.execute("UPDATE player"
@@ -210,7 +233,7 @@ class Database:
         self.cursor.execute("INSERT INTO team_statistics" +
                             " (team_id, competition_id, season, won, drawn, lost, goals_for, goals_away)" +
                             " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                            (team_s.team.get_id(), team_s.competition.get_id(), game_season, team_s.won,
+                            (team_s.team.get_id(), team_s.league.get_id(), game_season, team_s.won,
                              team_s.drawn, team_s.lost, team_s.goals_for, team_s.goals_away))
 
     def update_team_statistics(self, team_s, game):
@@ -221,7 +244,7 @@ class Database:
                             ", goals_for=" + str(team_s.goals_for) +
                             ", goals_away=" + str(team_s.goals_away) +
                             " WHERE team_id= " + str(team_s.team.get_id()) +
-                            " AND competition_id= " + str(team_s.competition.get_id()) +
+                            " AND competition_id= " + str(team_s.league.get_id()) +
                             " AND season=" + str(game.season))
 
     def insert_player_statistics(self, player_sc, game_season):
@@ -252,6 +275,16 @@ class Database:
                                     " VALUES (?, ?, ?, ?, ?, ?, ?)",
                                     (league.get_id(), match.round, match.home.get_id(), match.away.get_id(),
                                      match.time, match.home_goals, match.away_goals))
+
+    def update_match(self, league):
+        for match in league.schedule:
+            self.cursor.execute("UPDATE match"
+                                " SET time=" + str(match.time) + ", home_goals=" + str(match.home_goals) +
+                                ", away_goals=" + str(match.away_goals) +
+                                " WHERE competition_id = " + str(league.get_id()) +
+                                " AND round = " + str(match.round) +
+                                " AND home_id = " + str(match.home.get_id()) +
+                                " AND away_id = " + str(match.away.get_id()))
 
     def load_schedule(self, game):
         self.cursor.execute("SELECT * FROM match")

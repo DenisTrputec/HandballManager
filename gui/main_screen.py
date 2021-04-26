@@ -38,7 +38,6 @@ class MainScreen(baseMainScreen, formMainScreen):
                 self.update_combobox_team(league)
                 print("->update_combobox_schedule")
                 self.update_combobox_schedule(league)
-                league.standings.sort(key=lambda x: [x.points(), x.goal_diff(), x.goals_for], reverse=True)
 
                 self.tblLeague.setRowCount(len(league.standings))
                 for row, team_s in enumerate(league.standings):
@@ -68,6 +67,7 @@ class MainScreen(baseMainScreen, formMainScreen):
     def update_combobox_team(self, league):
         print("update_combobox_team, arg", league.name)
         self.cbTeam.clear()
+        league.standings.sort(key=lambda x: [x.points(), x.goal_diff(), x.goals_for], reverse=True)
         for team_sc in league.standings:
             for team in league.teams:
                 if team_sc.team == team:

@@ -17,16 +17,23 @@ class Database:
         self.cursor = None
 
     def open_connection(self):
+        logging.debug("Database.open_connection()")
         self.connection = sqlite3.connect(self.db_name)
         self.cursor = self.connection.cursor()
+        logging.debug("Database.open_connection() Executed")
 
     def close_connection(self):
+        logging.debug("Database.close_connection()")
         self.connection.close()
+        logging.debug("Database.close_connection() Executed")
 
     def commit(self):
+        logging.debug("Database.commit()")
         self.connection.commit()
+        logging.debug("Database.commit() Executed")
 
     def new_game(self, game):
+        logging.debug("Database.new_game()")
         self.open_connection()
         self.update_calendar(game)
         self.commit()
@@ -41,13 +48,12 @@ class Database:
         self.load_schedule(game)
         self.commit()
         self.close_connection()
+        logging.debug("Database.new_game() Executed")
 
     def load_game(self, game):
         logging.debug("Database.load_game()")
-        logging.info("Database.open_connection()")
         self.open_connection()
 
-        logging.info("SELECT * FROM calendar")
         self.cursor.execute("SELECT * FROM calendar")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
@@ -55,13 +61,11 @@ class Database:
                 game.season = t[1]
                 game.week = t[2]
 
-        logging.info("SELECT * FROM country")
         self.cursor.execute("SELECT * FROM country")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
             game.countries.append(Country(t[0], t[1], t[2]))
 
-        logging.info("SELECT * FROM v_league")
         self.cursor.execute("SELECT * FROM v_league")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
@@ -69,7 +73,6 @@ class Database:
                 if country.get_id() == t[3]:
                     game.leagues.append(League(t[0], t[1], t[2], country, t[4]))
 
-        logging.info("SELECT * FROM v_club")
         self.cursor.execute("SELECT * FROM v_club")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
@@ -77,9 +80,10 @@ class Database:
                 if country.get_id() == t[2]:
                     for league in game.leagues:
                         if league.get_id() == t[3]:
-                            game.clubs.append(Club(t[0], t[1], country, league, t[4]))
+                            club = Club(t[0], t[1], country, league, t[4])
+                            game.clubs.append(club)
+                            league.teams.append(club)
 
-        logging.info("SELECT * FROM v_player")
         self.cursor.execute("SELECT * FROM v_player")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
@@ -87,10 +91,10 @@ class Database:
                 if country.get_id() == t[7]:
                     for club in game.clubs:
                         if club.get_id() == t[8]:
-                            game.players.append(
-                                Player(t[0], t[1], t[2], t[3], t[4], t[5], t[6], country, club, t[9], t[10], t[11]))
+                            player = Player(t[0], t[1], t[2], t[3], t[4], t[5], t[6], country, club, t[9], t[10], t[11])
+                            game.players.append(player)
+                            club.players.append(player)
 
-        logging.info("SELECT * FROM team_statistics")
         self.cursor.execute("SELECT * FROM team_statistics")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
@@ -99,9 +103,8 @@ class Database:
                     if league.get_id() == t[1]:
                         for club in game.clubs:
                             if club.get_id() == t[0]:
-                                game.team_statistics.append(TeamStatistics(club, league, t[3], t[4], t[5], t[6], t[7]))
+                                league.standings.append(TeamStatistics(club, league, t[3], t[4], t[5], t[6], t[7]))
 
-        logging.info("SELECT * FROM player_statistics")
         self.cursor.execute("SELECT * FROM player_statistics")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
@@ -110,55 +113,23 @@ class Database:
                     if league.get_id() == t[1]:
                         for player in game.players:
                             if player.get_id() == t[0]:
-                                league.players_sc.append(PlayerStatisticsCompetition(player, league, t[3], t[4], t[5], t[6]))
+                                league.players_sc.append(
+                                    PlayerStatisticsCompetition(player, league, t[3], t[4], t[5], t[6], t[7]))
 
-        logging.info("SELECT * FROM match")
-        self.cursor.execute("SELECT * FROM match")
-        tuple_list = self.cursor.fetchall()
-        for t in tuple_list:
-            for league in game.leagues:
-                if league.get_id() == t[0]:
-                    home = None
-                    away = None
-                    for team in game.clubs:
-                        if team.get_id() == t[2]:
-                            home = team
-                        if team.get_id() == t[3]:
-                            away = team
-                    game.schedule.append(Match(league, t[1], home, away, t[4], t[5], t[6]))
-
-        logging.info("Append players to clubs")
-        for club in game.clubs:
-            for player in game.players:
-                if club.get_id() == player.club.get_id():
-                    club.players.append(player)
-
-        logging.info("Append clubs to leagues and matches to leagues schedules")
-        for league in game.leagues:
-            for club in game.clubs:
-                if league.get_id() == club.league.get_id():
-                    league.teams.append(club)
-            for club_s in game.team_statistics:
-                if league.get_id() == club_s.league.get_id():
-                    league.standings.append(club_s)
-            for match in game.schedule:
-                if league.get_id() == match.competition.get_id():
-                    league.schedule.append(match)
+        self.load_schedule(game)
 
         self.commit()
         self.close_connection()
         logging.debug("Database.load_game() Executed")
 
     def save_game(self, game):
-        print("\n\nDatabase.save_game()\nopen_connection")
+        logging.debug("Database.save_game()")
         self.open_connection()
 
         # Update table calendar
-        print("update_calendar")
         self.update_calendar(game)
 
         # Update table club
-        print("update_club")
         self.update_club(game)
 
         # Update tables person and player
@@ -167,23 +138,26 @@ class Database:
         player_database = [t[0] for t in tuple_list]
         for player in game.players:
             if player.get_id() not in player_database:
-                print("insert_player")
+                logging.info("Database.insert_player()")
                 self.insert_player(player)
             else:
-                print("update_player")
+                logging.info("Database.update_player()")
                 self.update_player(player)
 
         # Update table player_statistics part 1
+        logging.info("SELECT * FROM player_statistics")
         self.cursor.execute("SELECT * FROM player_statistics")
         tuple_list = self.cursor.fetchall()
         player_s_database = [t[0] for t in tuple_list]
 
         # Update table team_statistics part 1
+        logging.info("SELECT * FROM team_statistics")
         self.cursor.execute("SELECT * FROM team_statistics")
         tuple_list = self.cursor.fetchall()
         team_s_database = [t[0] for t in tuple_list]
 
         # Update table match part 1
+        logging.info("SELECT * FROM match")
         self.cursor.execute("SELECT * FROM match")
         tuple_list = self.cursor.fetchall()
         match_database = [(t[0], t[1], t[2], t[3]) for t in tuple_list]
@@ -192,43 +166,51 @@ class Database:
             # Update table player_statistics part 2
             for player_sc in league.players_sc:
                 if player_sc.player.get_id() not in player_s_database:
-                    print("insert_player_statistics")
+                    logging.info("Database.insert_player_statistics()")
                     self.insert_player_statistics(player_sc, game.season)
                 else:
-                    print("update_player_statistics")
+                    logging.info("Database.update_player_statistics()")
                     self.update_player_statistics(player_sc, game)
 
             # Update table team_statistics part 2
             for team_sc in league.standings:
                 if team_sc.team.get_id() not in team_s_database:
-                    print("insert_team_statistics")
+                    logging.info("Database.insert_team_statistics()")
                     self.insert_team_statistics(team_sc, game.season)
                 else:
-                    print("update_team_statistics")
+                    logging.info("Database.update_team_statistics()")
                     self.update_team_statistics(team_sc, game)
 
             # Update table match
-            print("update_match")
+            logging.info("Database.update_match()")
             self.update_match(league)
 
+        logging.info("Database.commit()")
         self.commit()
+
         self.close_connection()
+        logging.debug("Database.save_game() Executed")
 
     def update_calendar(self, game):
+        logging.debug("Database.update_calendar()")
         self.cursor.execute("UPDATE calendar "
                             "SET game_name='" + game.name +
                             "', season=" + str(game.season) +
                             ", week=" + str(game.week) +
                             " WHERE game_name LIKE 'default' OR game_name LIKE '" + game.name + "'")
+        logging.debug("Database.update_calendar() Executed")
 
     def update_club(self, game):
+        logging.debug("Database.update_club()")
         for club in game.clubs:
             self.cursor.execute("UPDATE club"
                                 " SET league_id=" + str(club.league.get_id()) +
                                 ", money=" + str(club.money) +
                                 " WHERE team_id = " + str(club.get_id()))
+        logging.debug("Database.update_club() Executed")
 
     def insert_player(self, player):
+        logging.debug("Database.insert_player()")
         self.cursor.execute("INSERT INTO person"
                             " SET name='" + player.name +
                             "', age=" + str(player.age) +
@@ -242,8 +224,10 @@ class Database:
                             ", attack=" + str(player.attack) +
                             ", defense=" + str(player.defense) +
                             ", injury_length=" + str(player.injury_length))
+        logging.debug("Database.insert_player() Executed")
 
     def update_player(self, player):
+        logging.debug("Database.update_player()")
         self.cursor.execute("UPDATE person"
                             " SET age=" + str(player.age) + ", loyalty=" + str(player.loyalty) +
                             ", country_id=" + str(player.country.get_id()) + ", club_id=" + str(player.club.get_id()) +
@@ -253,15 +237,19 @@ class Database:
                             " SET attack=" + str(player.attack) + ", defense=" + str(player.defense) +
                             ", injury_length=" + str(player.injury_length) +
                             " WHERE person_id = " + str(player.get_id()))
+        logging.debug("Database.update_player() Executed")
 
     def insert_team_statistics(self, team_s, game_season):
+        logging.debug("Database.insert_team_statistics()")
         self.cursor.execute("INSERT INTO team_statistics" +
                             " (team_id, competition_id, season, won, drawn, lost, goals_for, goals_away)" +
                             " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                             (team_s.team.get_id(), team_s.league.get_id(), game_season, team_s.won,
                              team_s.drawn, team_s.lost, team_s.goals_for, team_s.goals_away))
+        logging.debug("Database.insert_team_statistics() Executed")
 
     def update_team_statistics(self, team_s, game):
+        logging.debug("Database.update_team_statistics()")
         self.cursor.execute("UPDATE team_statistics"
                             " SET won=" + str(team_s.won) +
                             ", drawn=" + str(team_s.drawn) +
@@ -271,8 +259,10 @@ class Database:
                             " WHERE team_id= " + str(team_s.team.get_id()) +
                             " AND competition_id= " + str(team_s.league.get_id()) +
                             " AND season=" + str(game.season))
+        logging.debug("Database.update_team_statistics() Executed")
 
     def insert_player_statistics(self, player_sc, game_season):
+        logging.debug("Database.insert_player_statistics()")
         self.cursor.execute("INSERT INTO player_statistics" +
                             " (player_id, competition_id, season, games,"
                             " attack_rating, attack_minutes, defense_rating, defense_minutes)" +
@@ -280,8 +270,10 @@ class Database:
                             (player_sc.player.get_id(), player_sc.competition.get_id(), game_season, player_sc.games,
                              player_sc.attack_rating, player_sc.attack_minutes,
                              player_sc.defense_rating, player_sc.defense_minutes))
+        logging.debug("Database.insert_player_statistics() Executed")
 
     def update_player_statistics(self, player_sc, game):
+        logging.debug("Database.update_player_statistics()")
         self.cursor.execute("UPDATE player_statistics"
                             " SET games=" + str(player_sc.games) +
                             ", attack_rating=" + str(player_sc.attack_rating) +
@@ -291,8 +283,10 @@ class Database:
                             " WHERE player_id= " + str(player_sc.player.get_id()) +
                             " AND competition_id= " + str(player_sc.competition.get_id()) +
                             " AND season=" + str(game.season))
+        logging.debug("Database.update_player_statistics() Executed")
 
     def insert_match(self, game):
+        logging.debug("Database.insert_match()")
         for league in game.leagues:
             for match in league.schedule:
                 self.cursor.execute("INSERT INTO match" +
@@ -300,8 +294,10 @@ class Database:
                                     " VALUES (?, ?, ?, ?, ?, ?, ?)",
                                     (league.get_id(), match.round, match.home.get_id(), match.away.get_id(),
                                      match.time, match.home_goals, match.away_goals))
+        logging.debug("Database.insert_match() Executed")
 
     def update_match(self, league):
+        logging.debug("Database.update_match()")
         for match in league.schedule:
             self.cursor.execute("UPDATE match"
                                 " SET time=" + str(match.time) + ", home_goals=" + str(match.home_goals) +
@@ -310,8 +306,10 @@ class Database:
                                 " AND round = " + str(match.round) +
                                 " AND home_id = " + str(match.home.get_id()) +
                                 " AND away_id = " + str(match.away.get_id()))
+        logging.debug("Database.update_match() Executed")
 
     def load_schedule(self, game):
+        logging.debug("Database.load_schedule()")
         self.cursor.execute("SELECT * FROM match")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
@@ -324,12 +322,10 @@ class Database:
                             home = team
                         if team.get_id() == t[3]:
                             away = team
-                    game.schedule.append(Match(league, t[1], home, away, t[4], t[5], t[6]))
-
-        for league in game.leagues:
-            for match in game.schedule:
-                if league.get_id() == match.competition.get_id():
+                    match = Match(league, t[1], home, away, t[4], t[5], t[6])
+                    game.schedule.append(match)
                     league.schedule.append(match)
+        logging.debug("Database.load_schedule() Executed")
 
 
 

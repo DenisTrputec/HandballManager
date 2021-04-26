@@ -11,7 +11,6 @@ class Game:
         self.leagues = []
         self.clubs = []
         self.players = []
-        self.team_statistics = []
         self.schedule = []
 
     def new_game(self, save_name):

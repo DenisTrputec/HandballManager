@@ -35,7 +35,7 @@ class Database:
     def new_game(self, game):
         logging.debug("Database.new_game()")
         self.open_connection()
-        self.update_calendar(game)
+        self.update_game_info(game)
         self.commit()
         self.close_connection()
 
@@ -54,7 +54,7 @@ class Database:
         logging.debug("Database.load_game()")
         self.open_connection()
 
-        self.cursor.execute("SELECT * FROM calendar")
+        self.cursor.execute("SELECT * FROM game_info")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
             if game.name == t[0]:
@@ -126,8 +126,8 @@ class Database:
         logging.debug("Database.save_game()")
         self.open_connection()
 
-        # Update table calendar
-        self.update_calendar(game)
+        # Update table game_info
+        self.update_game_info(game)
 
         # Update table club
         self.update_club(game)
@@ -191,14 +191,14 @@ class Database:
         self.close_connection()
         logging.debug("Database.save_game() Executed")
 
-    def update_calendar(self, game):
-        logging.debug("Database.update_calendar()")
-        self.cursor.execute("UPDATE calendar "
+    def update_game_info(self, game):
+        logging.debug("Database.update_game_info()")
+        self.cursor.execute("UPDATE game_info "
                             "SET game_name='" + game.name +
                             "', season=" + str(game.season) +
                             ", week=" + str(game.week) +
                             " WHERE game_name LIKE 'default' OR game_name LIKE '" + game.name + "'")
-        logging.debug("Database.update_calendar() Executed")
+        logging.debug("Database.update_game_info() Executed")
 
     def update_club(self, game):
         logging.debug("Database.update_club()")

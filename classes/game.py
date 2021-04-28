@@ -12,6 +12,7 @@ class Game:
         self.clubs = []
         self.players = []
         self.schedule = []
+        self.calendar = []
 
     def new_game(self, save_name):
         self.name = save_name

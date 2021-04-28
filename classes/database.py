@@ -116,6 +116,13 @@ class Database:
                                 league.players_sc.append(
                                     PlayerStatisticsCompetition(player, league, t[3], t[4], t[5], t[6], t[7]))
 
+        self.cursor.execute("SELECT * FROM calendar")
+        tuple_list = self.cursor.fetchall()
+        for t in tuple_list:
+            for league in game.leagues:
+                if league.get_id() == t[1]:
+                    game.calendar.append((t[0], league, t[2]))
+
         self.load_schedule(game)
 
         self.commit()

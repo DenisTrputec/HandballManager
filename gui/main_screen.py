@@ -16,13 +16,28 @@ class MainScreen(baseMainScreen, formMainScreen):
         self.child_window = None
         self.game = game
         self.fill_combobox_league()
-        self.update_table_league()
+        self.setup_window()
+        # self.update_table_league()
 
         self.cbLeague.currentTextChanged.connect(self.update_table_league)
         self.cbSchedule.currentTextChanged.connect(self.update_table_schedule)
         self.cbTeam.currentTextChanged.connect(self.update_table_team)
         self.btnNextMatch.clicked.connect(self.next_match)
         self.actSaveGame.triggered.connect(self.game.save_game)
+
+    def setup_window(self):
+        # Check if next week
+        is_finished = True
+        for event in self.game.calendar:
+            if self.game.week == event[0]:
+                for match in self.game.schedule:
+                    if match.round == event[2] and match.time == 0:
+                        is_finished = False
+                        break
+        if is_finished:
+            self.game.week += 1
+        self.lblWeek.setText("Week: " + str(self.game.week))
+        self.update_table_league()
 
     def fill_combobox_league(self):
         print("fill_combobox_league")
@@ -74,6 +89,7 @@ class MainScreen(baseMainScreen, formMainScreen):
                     print("update_combobox_team", team.name)
                     self.cbTeam.addItem(team.name)
                     break
+        self.cbTeam.setMaxVisibleItems(len(league.standings))
         print("->update_table_team")
         self.update_table_team()
         print("update_combobox_team executed")

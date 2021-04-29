@@ -81,9 +81,7 @@ class Match(baseMatch, formMatch):
         if self.match.time == 60:
             self.match.finish_match()
             self.parent_window.show()
-            # self.parent_window.fill_combobox_league()
             self.parent_window.setup_window()
-            # self.parent_window.update_table_league()
             self.parent_window.child_window = None
             return
 

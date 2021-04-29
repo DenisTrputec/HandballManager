@@ -30,8 +30,8 @@ class Player(Person):
                f"Defense: {self.defense}, Loyalty: {self.loyalty}, Nationality: {self.country.nationality}, Club: " \
                f"{self.club.name}, Contract: {self.contract_length}, Cost: {self.salary}, Injury: {self.injury_length}"
 
-    def generate_injury(self):
-        inj = random.randint(1, 14)
+    def generate_injury(self, chance=18):
+        inj = random.randint(1, chance)
         while inj == 1:
             self.injury_length += 1
             inj = random.randint(1, 2)

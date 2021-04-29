@@ -1,6 +1,7 @@
 from PyQt5 import uic, QtWidgets
 from PyQt5.QtWidgets import QTableWidgetItem
 from gui.pre_match import PreMatch
+from gui.injury_update import InjuryUpdate
 
 
 uiMainScreen = "gui/main_screen.ui"
@@ -22,7 +23,7 @@ class MainScreen(baseMainScreen, formMainScreen):
         self.cbLeague.currentTextChanged.connect(self.update_table_league)
         self.cbSchedule.currentTextChanged.connect(self.update_table_schedule)
         self.cbTeam.currentTextChanged.connect(self.update_table_team)
-        self.btnNextMatch.clicked.connect(self.next_match)
+        self.btnNext.clicked.connect(self.next)
         self.actSaveGame.triggered.connect(self.game.save_game)
 
     def setup_window(self):
@@ -35,7 +36,7 @@ class MainScreen(baseMainScreen, formMainScreen):
                         is_finished = False
                         break
         if is_finished:
-            self.game.week += 1
+            self.btnNext.setText("Next Week")
         self.lblWeek.setText("Week: " + str(self.game.week))
         self.update_table_league()
 
@@ -179,6 +180,13 @@ class MainScreen(baseMainScreen, formMainScreen):
                 break
         print("update_table_schedule executed")
 
+    def next(self):
+        if self.btnNext.text() == "Next Match":
+            self.next_match()
+        elif self.btnNext.text() == "Next Week":
+            self.update_injuries()
+            self.game.week += 1
+
     def next_match(self):
         self.game.schedule.sort(key=lambda x: [x.round, x.competition.get_id()])
         for match in self.game.schedule:
@@ -187,3 +195,7 @@ class MainScreen(baseMainScreen, formMainScreen):
                 self.child_window.show()
                 self.hide()
                 break
+
+    def update_injuries(self):
+        self.child_window = InjuryUpdate(self, self.game)
+        self.child_window.show()

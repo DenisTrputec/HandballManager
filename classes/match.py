@@ -56,8 +56,8 @@ class Match:
 
     def finish_match(self):
         self.competition.save_match_result(self)
-        self.home.generate_injury()
-        self.away.generate_injury()
+        # self.home.generate_injury()
+        # self.away.generate_injury()
 
 
 def play_atk(player_sm):

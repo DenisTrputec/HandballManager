@@ -185,7 +185,7 @@
      </property>
     </column>
    </widget>
-   <widget class="QPushButton" name="btnNextMatch">
+   <widget class="QPushButton" name="btnNext">
     <property name="geometry">
      <rect>
       <x>940</x>

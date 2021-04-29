@@ -18,13 +18,18 @@ class Club(Team):
     def costs(self):
         return sum([player.salary for player in self.players])
 
-    def generate_injury(self):
+    def generate_injury(self, chance=18):
+        returned_from_injury = []
+        new_injuries = []
+
         random.shuffle(self.players)
         for player in self.players:
 
             # Player is already injured
             if player.injury_length > 0:
                 player.injury_length -= 1
+                if player.injury_length == 0:
+                    returned_from_injury.append(player)
                 continue
 
             # At least 14 players must stay available
@@ -34,5 +39,7 @@ class Club(Team):
             # At least 1 player on each position must stay available
             if len([x for x in self.players if (x.position == player.position and x.injury_length == 0)]) > 1:
                 player.generate_injury()
+                if player.injury_length > 0:
+                    new_injuries.append(player)
 
-            print(player.name, player.injury_length)
+        return returned_from_injury, new_injuries

@@ -56,12 +56,10 @@ class Match:
 
     def finish_match(self):
         self.competition.save_match_result(self)
-        # self.home.generate_injury()
-        # self.away.generate_injury()
 
 
 def play_atk(player_sm):
-    if player_sm.attack_rating == 0 and player_sm.player.position.value != 1:
+    if player_sm.attack_minutes == 0 and player_sm.player.position.value != 1:
         rating = random.randint(1, 5)
         if rating <= 1:
             player_sm.attack_rating = player_sm.player.attack - 1
@@ -74,7 +72,7 @@ def play_atk(player_sm):
 
 
 def play_def(player_sm):
-    if player_sm.defense_rating == 0:
+    if player_sm.defense_minutes == 0:
         rating = random.randint(1, 5)
         if rating <= 1:
             player_sm.defense_rating = player_sm.player.defense - 1

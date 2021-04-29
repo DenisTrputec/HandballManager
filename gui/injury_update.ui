@@ -21,7 +21,7 @@
     <rect>
      <x>20</x>
      <y>90</y>
-     <width>511</width>
+     <width>561</width>
      <height>671</height>
     </rect>
    </property>
@@ -33,6 +33,11 @@
    <column>
     <property name="text">
      <string>Player</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Pos</string>
     </property>
    </column>
    <column>
@@ -52,14 +57,19 @@
    </column>
    <column>
     <property name="text">
-     <string>Injury Length</string>
+     <string>Pos</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Len</string>
     </property>
    </column>
   </widget>
   <widget class="QPushButton" name="btnConfirm">
    <property name="geometry">
     <rect>
-     <x>550</x>
+     <x>610</x>
      <y>360</y>
      <width>171</width>
      <height>61</height>

@@ -186,6 +186,8 @@ class MainScreen(baseMainScreen, formMainScreen):
         elif self.btnNext.text() == "Next Week":
             self.update_injuries()
             self.game.week += 1
+            self.lblWeek.setText("Week: " + str(self.game.week))
+            self.btnNext.setText("Next Match")
 
     def next_match(self):
         self.game.schedule.sort(key=lambda x: [x.round, x.competition.get_id()])

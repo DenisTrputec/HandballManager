@@ -54,6 +54,13 @@ class Match:
 
         self.time += 30
 
+        if self.time == 60:
+            for player_sm in self.home_players + self.away_players:
+                if player_sm.attack_minutes > 0:
+                    player_sm.attack_games += 1
+                if player_sm.defense_minutes > 0:
+                    player_sm.defense_games += 1
+
     def finish_match(self):
         self.competition.save_match_result(self)
 

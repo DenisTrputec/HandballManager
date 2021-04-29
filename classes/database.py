@@ -114,7 +114,7 @@ class Database:
                         for player in game.players:
                             if player.get_id() == t[0]:
                                 league.players_sc.append(
-                                    PlayerStatisticsCompetition(player, league, t[3], t[4], t[5], t[6], t[7]))
+                                    PlayerStatisticsCompetition(player, league, t[3], t[4], t[5], t[6], t[7], t[8], t[9]))
 
         self.cursor.execute("SELECT * FROM calendar")
         tuple_list = self.cursor.fetchall()
@@ -271,20 +271,22 @@ class Database:
     def insert_player_statistics(self, player_sc, game_season):
         logging.debug("Database.insert_player_statistics()")
         self.cursor.execute("INSERT INTO player_statistics" +
-                            " (player_id, competition_id, season, games,"
-                            " attack_rating, attack_minutes, defense_rating, defense_minutes)" +
-                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                            " (player_id, competition_id, season, games, attack_games, attack_rating,"
+                            " attack_minutes, defense_games, defense_rating, defense_minutes)" +
+                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                             (player_sc.player.get_id(), player_sc.competition.get_id(), game_season, player_sc.games,
-                             player_sc.attack_rating, player_sc.attack_minutes,
-                             player_sc.defense_rating, player_sc.defense_minutes))
+                             player_sc.attack_games, player_sc.attack_rating, player_sc.attack_minutes,
+                             player_sc.defense_games, player_sc.defense_rating, player_sc.defense_minutes))
         logging.debug("Database.insert_player_statistics() Executed")
 
     def update_player_statistics(self, player_sc, game):
         logging.debug("Database.update_player_statistics()")
         self.cursor.execute("UPDATE player_statistics"
                             " SET games=" + str(player_sc.games) +
+                            ", attack_games=" + str(player_sc.attack_games) +
                             ", attack_rating=" + str(player_sc.attack_rating) +
                             ", attack_minutes=" + str(player_sc.attack_minutes) +
+                            ", defense_games=" + str(player_sc.defense_games) +
                             ", defense_rating=" + str(player_sc.defense_rating) +
                             ", defense_minutes=" + str(player_sc.defense_minutes) +
                             " WHERE player_id= " + str(player_sc.player.get_id()) +

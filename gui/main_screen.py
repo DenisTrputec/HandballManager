@@ -66,7 +66,6 @@ class MainScreen(baseMainScreen, formMainScreen):
                     self.tblLeague.setItem(row, 6, QTableWidgetItem(str(team_s.goals_away)))
                     self.tblLeague.setItem(row, 7, QTableWidgetItem(str(team_s.goal_diff())))
                     self.tblLeague.setItem(row, 8, QTableWidgetItem(str(team_s.points())))
-                    row += 1
                 header = self.tblLeague.horizontalHeader()
                 header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
                 header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
@@ -113,10 +112,12 @@ class MainScreen(baseMainScreen, formMainScreen):
                         self.tblTeam.setItem(row, 1, QTableWidgetItem(str(player_sc.player.age)))
                         self.tblTeam.setItem(row, 2, QTableWidgetItem(player_sc.player.position.name))
                         self.tblTeam.setItem(row, 3, QTableWidgetItem(str(player_sc.games)))
-                        self.tblTeam.setItem(row, 4, QTableWidgetItem(str(player_sc.attack_rating)))
-                        self.tblTeam.setItem(row, 5, QTableWidgetItem(str(player_sc.attack_minutes)))
-                        self.tblTeam.setItem(row, 6, QTableWidgetItem(str(player_sc.defense_rating)))
-                        self.tblTeam.setItem(row, 7, QTableWidgetItem(str(player_sc.defense_minutes)))
+                        self.tblTeam.setItem(row, 4, QTableWidgetItem(str(player_sc.attack_games)))
+                        self.tblTeam.setItem(row, 5, QTableWidgetItem(str(player_sc.attack_rating)))
+                        self.tblTeam.setItem(row, 6, QTableWidgetItem(str(player_sc.attack_minutes)))
+                        self.tblTeam.setItem(row, 7, QTableWidgetItem(str(player_sc.defense_games)))
+                        self.tblTeam.setItem(row, 8, QTableWidgetItem(str(player_sc.defense_rating)))
+                        self.tblTeam.setItem(row, 9, QTableWidgetItem(str(player_sc.defense_minutes)))
                         row += 1
                         if row == len(league.players_sc):
                             break
@@ -130,6 +131,8 @@ class MainScreen(baseMainScreen, formMainScreen):
                     header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
                     header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
                     header.setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
+                    header.setSectionResizeMode(8, QtWidgets.QHeaderView.ResizeToContents)
+                    header.setSectionResizeMode(9, QtWidgets.QHeaderView.ResizeToContents)
                     break
                 break
         print("update_table_team executed")

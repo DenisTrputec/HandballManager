@@ -173,28 +173,21 @@ class Database:
             # Update table player_statistics part 2
             for player_sc in league.players_sc:
                 if player_sc.player.get_id() not in player_s_database:
-                    logging.info("Database.insert_player_statistics()")
                     self.insert_player_statistics(player_sc, game.season)
                 else:
-                    logging.info("Database.update_player_statistics()")
                     self.update_player_statistics(player_sc, game)
 
             # Update table team_statistics part 2
             for team_sc in league.standings:
                 if team_sc.team.get_id() not in team_s_database:
-                    logging.info("Database.insert_team_statistics()")
                     self.insert_team_statistics(team_sc, game.season)
                 else:
-                    logging.info("Database.update_team_statistics()")
                     self.update_team_statistics(team_sc, game)
 
             # Update table match
-            logging.info("Database.update_match()")
             self.update_match(league)
 
-        logging.info("Database.commit()")
         self.commit()
-
         self.close_connection()
         logging.debug("Database.save_game() Executed")
 

@@ -117,7 +117,7 @@
      <rect>
       <x>940</x>
       <y>50</y>
-      <width>760</width>
+      <width>801</width>
       <height>601</height>
      </rect>
     </property>
@@ -161,12 +161,22 @@
     </column>
     <column>
      <property name="text">
+      <string>Atk_gam</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
       <string>Atk_rat</string>
      </property>
     </column>
     <column>
      <property name="text">
       <string>Atk_min</string>
+     </property>
+    </column>
+    <column>
+     <property name="text">
+      <string>Def_gam</string>
      </property>
     </column>
     <column>

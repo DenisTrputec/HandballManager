@@ -21,7 +21,7 @@ class Match:
         self.home_players = [PlayerStatisticsMatch(player, self) for player in self.home_players]
         self.away_players = [PlayerStatisticsMatch(player, self) for player in self.away_players]
 
-    def start_match(self, home_atk, home_def, away_atk, away_def):
+    def start_match(self, home_atk, home_def, away_atk, away_def, home_advantage=1):
         if self.time == 0:
             for player_sm in self.home_players + self.away_players:
                 player_sm.games += 1
@@ -43,7 +43,7 @@ class Match:
 
         print("subs", home_subs, away_subs)
         print(str(self.home_goals) + ":" + str(self.away_goals))
-        self.home_goals += 15 - max(0, (home_subs - away_subs) * 2)
+        self.home_goals += 14 - max(0, (home_subs - away_subs) * 2) + home_advantage
         self.away_goals += 14 - max(0, (away_subs - home_subs) * 2)
         while (self.home_goals + self.away_goals) > self.time + 30 and self.home_goals > 4 and self.away_goals > 4:
             self.home_goals -= 1

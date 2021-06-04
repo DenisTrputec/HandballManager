@@ -42,6 +42,8 @@ class League(Competition):
                     team_s.won += 1
                 elif match.home_goals < match.away_goals:
                     team_s.lost += 1
+                else:
+                    team_s.drawn += 1
                 team_s.goals_for += match.home_goals
                 team_s.goals_away += match.away_goals
 
@@ -50,6 +52,8 @@ class League(Competition):
                     team_s.lost += 1
                 elif match.home_goals < match.away_goals:
                     team_s.won += 1
+                else:
+                    team_s.drawn += 1
                 team_s.goals_for += match.away_goals
                 team_s.goals_away += match.home_goals
 

@@ -1,3 +1,4 @@
+import logging
 from PyQt5 import uic, QtWidgets
 from PyQt5.QtWidgets import QTableWidgetItem
 from gui.pre_match import PreMatch
@@ -27,16 +28,7 @@ class MainScreen(baseMainScreen, formMainScreen):
         self.actSaveGame.triggered.connect(self.game.save_game)
 
     def setup_window(self):
-        # Check if next week
-        is_finished = True
-        for event in self.game.calendar:
-            if self.game.week == event[0]:
-                for match in self.game.schedule:
-                    if match.round == event[2] and match.time == 0:
-                        is_finished = False
-                        break
-        if is_finished:
-            self.btnNext.setText("Next Week")
+        self.check_if_next_week()
         self.lblWeek.setText("Week: " + str(self.game.week))
         self.update_table_league()
 
@@ -190,7 +182,7 @@ class MainScreen(baseMainScreen, formMainScreen):
             self.update_injuries()
             self.game.week += 1
             self.lblWeek.setText("Week: " + str(self.game.week))
-            self.btnNext.setText("Next Match")
+            self.check_if_next_week()
 
     def next_match(self):
         self.game.schedule.sort(key=lambda x: [x.round, x.competition.get_id()])
@@ -200,6 +192,19 @@ class MainScreen(baseMainScreen, formMainScreen):
                 self.child_window.show()
                 self.hide()
                 break
+
+    def check_if_next_week(self):
+        is_finished = True
+        for event in self.game.calendar:
+            if self.game.week == event[0]:
+                for match in self.game.schedule:
+                    if match.round == event[2] and match.time == 0:
+                        is_finished = False
+                        break
+        if is_finished:
+            self.btnNext.setText("Next Week")
+        else:
+            self.btnNext.setText("Next Match")
 
     def update_injuries(self):
         self.child_window = InjuryUpdate(self, self.game)

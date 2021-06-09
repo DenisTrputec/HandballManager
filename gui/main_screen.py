@@ -2,6 +2,7 @@ import logging
 from PyQt5 import uic, QtWidgets
 from PyQt5.QtWidgets import QTableWidgetItem
 from gui.pre_match import PreMatch
+from gui.contract_offers import ContractOffers
 from gui.injury_update import InjuryUpdate
 
 
@@ -182,7 +183,12 @@ class MainScreen(baseMainScreen, formMainScreen):
             self.update_injuries()
             self.game.week += 1
             self.lblWeek.setText("Week: " + str(self.game.week))
+            if self.game.week == 29:
+                for league in self.game.leagues:
+                    league.payout()
             self.check_if_next_week()
+        elif self.btnNext.text() == "Contract Offers":
+            self.contract_offers()
 
     def next_match(self):
         self.game.schedule.sort(key=lambda x: [x.round, x.competition.get_id()])
@@ -194,6 +200,8 @@ class MainScreen(baseMainScreen, formMainScreen):
                 break
 
     def check_if_next_week(self):
+        is_transfer_window_open = True if 30 <= self.game.week <= 38 else False
+
         is_finished = True
         for event in self.game.calendar:
             if self.game.week == event[0]:
@@ -201,7 +209,9 @@ class MainScreen(baseMainScreen, formMainScreen):
                     if match.round == event[2] and match.time == 0:
                         is_finished = False
                         break
-        if is_finished:
+        if is_transfer_window_open:
+            self.btnNext.setText("Contract Offers")
+        elif is_finished:
             self.btnNext.setText("Next Week")
         else:
             self.btnNext.setText("Next Match")
@@ -209,3 +219,8 @@ class MainScreen(baseMainScreen, formMainScreen):
     def update_injuries(self):
         self.child_window = InjuryUpdate(self, self.game)
         self.child_window.show()
+
+    def contract_offers(self):
+        self.child_window = ContractOffers(self, self.game)
+        self.child_window.show()
+        self.hide()

@@ -59,3 +59,10 @@ class League(Competition):
 
         self.update_player_statistics(match.home_players)
         self.update_player_statistics(match.away_players)
+
+    def payout(self):
+        prize_money = [110, 100, 90, 85, 80, 75, 70, 66, 63, 60, 57, 55]
+        print("End of season payout")
+        for team_s, money in zip(self.standings, prize_money):
+            team_s.team.money += money
+            print(f"{team_s.team.name}: {money}")

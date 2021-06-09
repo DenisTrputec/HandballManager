@@ -193,6 +193,7 @@ class Database:
 
     def update_game_info(self, game):
         logging.debug("Database.update_game_info()")
+        logging.debug(game.name + " " + str(game.season) + " " + str(game.week))
         self.cursor.execute("UPDATE game_info "
                             "SET game_name='" + game.name +
                             "', season=" + str(game.season) +

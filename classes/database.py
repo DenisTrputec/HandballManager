@@ -330,6 +330,26 @@ class Database:
                     league.schedule.append(match)
         logging.debug("Database.load_schedule() Executed")
 
+    def return_names(self, country_id):
+        logging.debug("Database.return_first_names()")
+        self.open_connection()
+
+        self.cursor.execute("SELECT * FROM person_name WHERE country_id=" + str(country_id) + " and type LIKE 'first'")
+        first_names = self.cursor.fetchall()
+        self.cursor.execute("SELECT * FROM person_name WHERE country_id=" + str(country_id)
+                            + " and type LIKE 'last' AND id > 201")
+        last_names = self.cursor.fetchall()
+
+        self.commit()
+        self.close_connection()
+        logging.debug("Database.return_first_names() Executed")
+
+        first_names = [t[1] for t in first_names][0]
+        last_names = [t[1] for t in last_names]
+        return first_names, last_names
+
+
+
 
 
 

@@ -29,7 +29,8 @@ class Player(Person):
     def __str__(self):
         return f"Name: {self.name}, Age: {self.age}, Position: {self.position.name}, Attack: {self.attack}, " \
                f"Defense: {self.defense}, Loyalty: {self.loyalty}, Nationality: {self.country.nationality}, Club: " \
-               f"{self.club.name}, Contract: {self.contract_length}, Cost: {self.salary}, Injury: {self.injury_length}"
+               f"{self.club.name if self.club is not None else '-'}, Contract: {self.contract_length}, " \
+               f"Cost: {self.salary}, Injury: {self.injury_length}"
 
     def generate_injury(self, chance=18):
         inj = random.randint(1, chance)

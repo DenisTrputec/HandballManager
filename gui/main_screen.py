@@ -210,6 +210,7 @@ class MainScreen(baseMainScreen, formMainScreen):
                         is_finished = False
                         break
         if is_transfer_window_open:
+            self.game.create_new_players()
             self.btnNext.setText("Contract Offers")
         elif is_finished:
             self.btnNext.setText("Next Week")

@@ -65,4 +65,4 @@ class League(Competition):
         print("End of season payout")
         for team_s, money in zip(self.standings, prize_money):
             team_s.team.money += money
-            print(f"{team_s.team.name}: {money}")
+            print(f"{team_s.team.name}: {money} {team_s.team.money}")

@@ -32,6 +32,10 @@ class Game:
         db = Database(save_name)
         db.load_game(self)
 
+    def decrease_contract_lengths(self):
+        for player in self.players:
+            player.contract_length -= 1
+
     def create_new_players(self):
         positions_cnt = {"GK": 0, "LW": 0, "LB": 0, "CB": 0, "P": 0, "RB": 0, "RW": 0}
         current_player_names = [player.name for player in self.players]
@@ -58,19 +62,17 @@ class Game:
                         continue  # only executed if the inner loop did NOT break
                     break
 
-                age = 18
+                age = 17
                 if position == Position.GK:
                     attack = 0
                     defense = randint(1, 2)
                 else:
-                    attack = randint(1, 5)
-                    defense = randint(1, 5)
-                    attack = attack - 2 if attack > 3 else attack
-                    defense = defense - 2 if defense > 3 else defense
-                    defense = defense - 1 if attack + defense == 6 else defense
+                    attack = randint(1, 2)
+                    defense = randint(1, 2)
                 loyalty = randint(1, 5)
                 player = Player(None, player_name, age, position, attack, defense, loyalty, league.country, None, 0, 0, 0)
                 print(player)
+                self.players.append(player)
 
             break   # Only one active league
 

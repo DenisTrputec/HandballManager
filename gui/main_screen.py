@@ -188,6 +188,8 @@ class MainScreen(baseMainScreen, formMainScreen):
                     league.payout()
             self.check_if_next_week()
         elif self.btnNext.text() == "Contract Offers":
+            self.game.decrease_contract_lengths()
+            self.game.create_new_players()
             self.contract_offers()
 
     def next_match(self):
@@ -210,7 +212,6 @@ class MainScreen(baseMainScreen, formMainScreen):
                         is_finished = False
                         break
         if is_transfer_window_open:
-            self.game.create_new_players()
             self.btnNext.setText("Contract Offers")
         elif is_finished:
             self.btnNext.setText("Next Week")

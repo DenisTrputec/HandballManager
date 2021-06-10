@@ -15,36 +15,53 @@ class ContractOffers(basePreMatch, formPreMatch):
         self.setupUi(self)
         self.parent_window = parent_window
         self.game = game
-        self.club_index = 0
-        # self.update()
+        self.cnt = 0
+        self.update()
         # self.btnConfirmSelection.clicked.connect(self.update_combobox)
         # self.btnStartMatch.clicked.connect(self.start_match)
 
     def update(self):
-        self.lblClubName.setText(self.match.home.name if self.is_home_active else self.match.away.name)
-        temp = "Next opponent: " + str(self.match.away.name if self.is_home_active else self.match.home.name)
-        self.lblNextOpponent.setText(temp)
+        self.lblClub.setText("Club: " + self.game.clubs[self.cnt].name)
+        player_cnt = len([player for player in self.game.clubs[self.cnt].players if player.contract_length > 0])
+        self.lblPlayers.setText("Players: " + str(player_cnt))
+        self.lblBudget.setText("Budget: " + str(self.game.clubs[self.cnt].budget()))
         self.update_table()
 
     def update_table(self):
-        players = self.match.home.players if self.is_home_active else self.match.away.players
+        players = [player for player in self.game.players if player.contract_length == 0]
         players.sort(key=lambda x: x.position.value)
         self.tblPlayers.setRowCount(len(players))
         for row, player in enumerate(players):
             item_player_name = QTableWidgetItem(player.name)
+            item_club_name = QTableWidgetItem(player.club.name if player.club is not None else "")
             is_selected = QTableWidgetItem("")
-            if player.injury_length > 0:
-                item_player_name.setForeground(QBrush(QColor(255, 0, 0)))
-            else:
-                is_selected.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
-                is_selected.setCheckState(QtCore.Qt.Unchecked)
+            is_selected.setFlags(QtCore.Qt.ItemIsUserCheckable | QtCore.Qt.ItemIsEnabled)
+            is_selected.setCheckState(QtCore.Qt.Unchecked)
+
             self.tblPlayers.setItem(row, 0, item_player_name)
             self.tblPlayers.setItem(row, 1, QTableWidgetItem(str(player.age)))
             self.tblPlayers.setItem(row, 2, QTableWidgetItem(player.position.name))
             self.tblPlayers.setItem(row, 3, QTableWidgetItem(str(player.attack)))
             self.tblPlayers.setItem(row, 4, QTableWidgetItem(str(player.defense)))
-            self.tblPlayers.setItem(row, 5, is_selected)
+            self.tblPlayers.setItem(row, 5, item_club_name)
+            self.tblPlayers.setItem(row, 6, is_selected)
+            self.tblPlayers.setItem(row, 7, QTableWidgetItem(""))
+            self.tblPlayers.setItem(row, 8, QTableWidgetItem(""))
             row += 1
+
+        if len(players) > 0:
+            header = self.tblPlayers.horizontalHeader()
+            header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+            header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(2, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(3, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(4, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(5, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(6, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
+            header.setSectionResizeMode(8, QtWidgets.QHeaderView.ResizeToContents)
+
 
     def update_combobox(self):
         # Reset players that will attend match and clear comboboxes

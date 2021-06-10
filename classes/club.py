@@ -18,6 +18,9 @@ class Club(Team):
     def costs(self):
         return sum([player.salary for player in self.players])
 
+    def budget(self):
+        return self.money - sum([player.salary for player in self.players if player.contract_length > 0])
+
     def generate_injury(self, chance=18):
         returned_from_injury = []
         new_injuries = []

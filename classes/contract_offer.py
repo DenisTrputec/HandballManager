@@ -15,8 +15,8 @@ class ContractOffer:
         self.salary = salary
         self.length = length
         self.week_offered = week
-        self.status = status
+        self.status = Status(status)
 
     def __str__(self):
         return f"\nPlayer: {self.player.name}\tWeek offered:{self.week_offered}\nClub: {self.club.name}\tReputation: " \
-               f"{self.club_reputation}\nSalary: {self.salary}\tLength: {self.length}\nStatus: {self.status.name}"
+               f"{round(self.club_reputation, 2)}\nSalary: {self.salary}\tLength: {self.length}\nStatus: {self.status.name}"

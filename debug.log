@@ -1,0 +1,11 @@
+INFO:root:Game started
+DEBUG:root:Database.load_game()
+DEBUG:root:Database.open_connection()
+DEBUG:root:Database.open_connection() Executed
+DEBUG:root:Database.load_schedule()
+DEBUG:root:Database.load_schedule() Executed
+DEBUG:root:Database.commit()
+DEBUG:root:Database.commit() Executed
+DEBUG:root:Database.close_connection()
+DEBUG:root:Database.close_connection() Executed
+DEBUG:root:Database.load_game() Executed

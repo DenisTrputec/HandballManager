@@ -7,6 +7,7 @@ from classes.player import Player
 from classes.team_statistics import TeamStatistics
 from classes.player_statistics_competition import PlayerStatisticsCompetition
 from classes.match import Match
+from classes.contract_offer import ContractOffer
 
 
 class Database:
@@ -94,6 +95,10 @@ class Database:
                             player = Player(t[0], t[1], t[2], t[3], t[4], t[5], t[6], country, club, t[9], t[10], t[11])
                             game.players.append(player)
                             club.players.append(player)
+                            break
+                    else:
+                        player = Player(t[0], t[1], t[2], t[3], t[4], t[5], t[6], country, None, t[9], t[10], t[11])
+                        game.players.append(player)
 
         self.cursor.execute("SELECT * FROM team_statistics")
         tuple_list = self.cursor.fetchall()
@@ -115,6 +120,18 @@ class Database:
                             if player.get_id() == t[0]:
                                 league.players_sc.append(
                                     PlayerStatisticsCompetition(player, league, t[3], t[4], t[5], t[6], t[7], t[8], t[9]))
+
+        self.cursor.execute("SELECT * FROM contract_offer")
+        tuple_list = self.cursor.fetchall()
+        for t in tuple_list:
+            p = c = None
+            for player in game.players:
+                if player.get_id() == t[0]:
+                    p = player
+            for club in game.clubs:
+                if club.get_id() == t[1]:
+                    c = club
+            game.contract_offers.append(ContractOffer(p, c, t[2], t[3], t[4], t[5], 0))
 
         self.cursor.execute("SELECT * FROM calendar")
         tuple_list = self.cursor.fetchall()
@@ -188,6 +205,7 @@ class Database:
             self.update_match(league)
 
         # Update table contract_offer
+        self.cursor.execute("DELETE FROM contract_offer")
         for offer in game.contract_offers:
             self.insert_contract_offer(offer)
 

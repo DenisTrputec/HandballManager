@@ -175,7 +175,7 @@ class ContractOffers(basePreMatch, formPreMatch):
 
                 for other_offer in self.game.contract_offers:
                     # Only if same player, different offer and other offer status is Pending
-                    if main_offer.player == other_offer.player and main_offer != other_offer \
+                    if main_offer.player.get_id() == other_offer.player.get_id() and main_offer != other_offer \
                             and other_offer.status == Status.Pending:
 
                         # Calculate other offer value

@@ -9,3 +9,742 @@ DEBUG:root:Database.commit() Executed
 DEBUG:root:Database.close_connection()
 DEBUG:root:Database.close_connection() Executed
 DEBUG:root:Database.load_game() Executed
+DEBUG:root:Database.save_game()
+DEBUG:root:Database.open_connection()
+DEBUG:root:Database.open_connection() Executed
+DEBUG:root:Database.update_game_info()
+DEBUG:root:d1 1 32
+DEBUG:root:Database.update_game_info() Executed
+DEBUG:root:Database.update_club()
+DEBUG:root:Database.update_club() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+INFO:root:Database.update_player()
+DEBUG:root:Database.update_player()
+DEBUG:root:Database.update_player() Executed
+DEBUG:root:Database.insert_contract_offer()
+DEBUG:root:Database.insert_contract_offer() Executed
+DEBUG:root:Database.insert_contract_offer()
+DEBUG:root:Database.insert_contract_offer() Executed
+DEBUG:root:Database.insert_contract_offer()
+DEBUG:root:Database.insert_contract_offer() Executed
+DEBUG:root:Database.insert_contract_offer()
+DEBUG:root:Database.insert_contract_offer() Executed
+DEBUG:root:Database.insert_contract_offer()
+DEBUG:root:Database.insert_contract_offer() Executed
+DEBUG:root:Database.insert_contract_offer()
+DEBUG:root:Database.insert_contract_offer() Executed
+DEBUG:root:Database.insert_contract_offer()
+DEBUG:root:Database.insert_contract_offer() Executed
+DEBUG:root:Database.insert_contract_offer()
+DEBUG:root:Database.insert_contract_offer() Executed
+DEBUG:root:Database.insert_contract_offer()
+DEBUG:root:Database.insert_contract_offer() Executed
+DEBUG:root:Database.commit()
+DEBUG:root:Database.commit() Executed
+DEBUG:root:Database.close_connection()
+DEBUG:root:Database.close_connection() Executed
+DEBUG:root:Database.save_game() Executed

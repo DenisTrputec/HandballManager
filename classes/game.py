@@ -86,14 +86,9 @@ class Game:
 
     def update_contract_offers_list(self):
         for offer in self.contract_offers:
-            if offer.status == Status.Rejected:
-                self.contract_offers.remove(offer)
-                print("Removed\n", offer)
-            elif offer.status == Status.Accepted:
+            if offer.status == Status.Accepted:
                 offer.player.club = offer.club
                 offer.player.salary = offer.salary
                 offer.player.contract_length = offer.length
-                self.contract_offers.remove(offer)
-                print("Accepted\n", offer)
-            else:
-                print("Pending\n", offer)
+
+        self.contract_offers = [offer for offer in self.contract_offers if offer.status == Status.Pending]

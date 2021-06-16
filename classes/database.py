@@ -168,46 +168,50 @@ class Database:
                 logging.info("Database.update_player()")
                 self.update_player(player)
 
-        # Update table player_statistics part 1
-        logging.info("SELECT * FROM player_statistics")
-        self.cursor.execute("SELECT * FROM player_statistics")
-        tuple_list = self.cursor.fetchall()
-        player_s_database = [t[0] for t in tuple_list]
+        # Don't update statistics if week > 29
+        if game.week <= 29:
+            
+            # Update table player_statistics part 1
+            logging.info("SELECT * FROM player_statistics")
+            self.cursor.execute("SELECT * FROM player_statistics")
+            tuple_list = self.cursor.fetchall()
+            player_s_database = [t[0] for t in tuple_list]
 
-        # Update table team_statistics part 1
-        logging.info("SELECT * FROM team_statistics")
-        self.cursor.execute("SELECT * FROM team_statistics")
-        tuple_list = self.cursor.fetchall()
-        team_s_database = [t[0] for t in tuple_list]
+            # Update table team_statistics part 1
+            logging.info("SELECT * FROM team_statistics")
+            self.cursor.execute("SELECT * FROM team_statistics")
+            tuple_list = self.cursor.fetchall()
+            team_s_database = [t[0] for t in tuple_list]
 
-        # Update table match part 1
-        logging.info("SELECT * FROM match")
-        self.cursor.execute("SELECT * FROM match")
-        tuple_list = self.cursor.fetchall()
-        match_database = [(t[0], t[1], t[2], t[3]) for t in tuple_list]
+            # Update table match part 1
+            logging.info("SELECT * FROM match")
+            self.cursor.execute("SELECT * FROM match")
+            tuple_list = self.cursor.fetchall()
+            match_database = [(t[0], t[1], t[2], t[3]) for t in tuple_list]
 
-        for league in game.leagues:
-            # Update table player_statistics part 2
-            for player_sc in league.players_sc:
-                if player_sc.player.get_id() not in player_s_database:
-                    self.insert_player_statistics(player_sc, game.season)
-                else:
-                    self.update_player_statistics(player_sc, game)
+            for league in game.leagues:
+                # Update table player_statistics part 2
+                for player_sc in league.players_sc:
+                    if player_sc.player.get_id() not in player_s_database:
+                        self.insert_player_statistics(player_sc, game.season)
+                    else:
+                        self.update_player_statistics(player_sc, game)
 
-            # Update table team_statistics part 2
-            for team_sc in league.standings:
-                if team_sc.team.get_id() not in team_s_database:
-                    self.insert_team_statistics(team_sc, game.season)
-                else:
-                    self.update_team_statistics(team_sc, game)
+                # Update table team_statistics part 2
+                for team_sc in league.standings:
+                    if team_sc.team.get_id() not in team_s_database:
+                        self.insert_team_statistics(team_sc, game.season)
+                    else:
+                        self.update_team_statistics(team_sc, game)
 
-            # Update table match
-            self.update_match(league)
+                # Update table match
+                self.update_match(league)
 
-        # Update table contract_offer
-        self.cursor.execute("DELETE FROM contract_offer")
-        for offer in game.contract_offers:
-            self.insert_contract_offer(offer)
+        else:
+            # Update table contract_offer only if week > 29
+            self.cursor.execute("DELETE FROM contract_offer")
+            for offer in game.contract_offers:
+                self.insert_contract_offer(offer)
 
         self.commit()
         self.close_connection()
@@ -248,15 +252,16 @@ class Database:
 
     def update_player(self, player):
         logging.debug("Database.update_player()")
-        self.cursor.execute("UPDATE person"
-                            " SET age=" + str(player.age) + ", loyalty=" + str(player.loyalty) +
-                            ", country_id=" + str(player.country.get_id()) + ", club_id=" + str(player.club.get_id()) +
-                            ", contract_length=" + str(player.contract_length) + ", salary=" + str(player.salary) +
-                            " WHERE id = " + str(player.get_id()))
-        self.cursor.execute("UPDATE player"
-                            " SET attack=" + str(player.attack) + ", defense=" + str(player.defense) +
-                            ", injury_length=" + str(player.injury_length) +
-                            " WHERE person_id = " + str(player.get_id()))
+        club = player.club.get_id() if player.club is not None else None
+        self.cursor.execute("UPDATE person" +
+                            " SET age=?, loyalty=?, country_id=?, club_id=?, contract_length=?, salary=?" +
+                            " WHERE id=?",
+                            (player.age, player.loyalty, player.country.get_id(), club, player.contract_length,
+                             player.salary, player.get_id()))
+        self.cursor.execute("UPDATE player" +
+                            " SET attack=?, defense=?, injury_length=?" +
+                            " WHERE person_id=?",
+                            (player.attack, player.defense, player.injury_length, player.get_id()))
         logging.debug("Database.update_player() Executed")
 
     def insert_team_statistics(self, team_s, game_season):

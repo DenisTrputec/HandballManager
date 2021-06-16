@@ -3,6 +3,7 @@ from random import randint, choice
 from classes.database import Database
 from classes.player import Player
 from classes.player import Position
+from classes.contract_offer import Status
 
 
 class Game:
@@ -16,6 +17,7 @@ class Game:
         self.players = []
         self.schedule = []
         self.calendar = []
+        self.contract_offers = []
 
     def new_game(self, save_name):
         self.name = save_name
@@ -41,6 +43,10 @@ class Game:
         current_player_names = [player.name for player in self.players]
 
         db = Database(self.name)
+        db.open_connection()
+        db.cursor.execute("select max(id) from person")
+        max_id = db.cursor.fetchall()[0][0]
+        db.close_connection()
         for league in self.leagues:
             first_names, last_names = db.return_names(league.country.get_id())
             for i in range(len(league.teams)):
@@ -70,9 +76,19 @@ class Game:
                     attack = randint(1, 2)
                     defense = randint(1, 2)
                 loyalty = randint(1, 5)
-                player = Player(None, player_name, age, position, attack, defense, loyalty, league.country, None, 0, 0, 0)
+                player = Player(max_id + 1, player_name, age, position, attack, defense, loyalty, league.country,
+                                None, 0, 0, 0)
+                max_id += 1
                 print(player)
                 self.players.append(player)
 
             break   # Only one active league
 
+    def update_contract_offers_list(self):
+        for offer in self.contract_offers:
+            if offer.status == Status.Rejected:
+                self.contract_offers.remove(offer)
+            elif offer.status == Status.Accepted:
+                offer.player.club = offer.club
+                offer.player.salary = offer.salary
+                offer.player.contract_length = offer.length

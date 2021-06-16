@@ -1,11 +1,42 @@
-from PyQt5.QtWidgets import QApplication, QTableWidgetItem
+from PyQt5.QtWidgets import QTableWidgetItem
 from PyQt5 import uic, QtCore, QtWidgets
-from PyQt5.QtGui import QBrush, QColor
-import gui.match
-import sys
+from classes.contract_offer import ContractOffer
+from classes.contract_offer import Status
 
 uiPreMatch = "gui/contract_offers.ui"
 formPreMatch, basePreMatch = uic.loadUiType(uiPreMatch)
+
+
+def get_offer_value(offer):
+    # Calculate main offer value
+    value = offer.salary + offer.club_reputation
+    if offer.player.club is not None and offer.club.get_id() == offer.player.club.get_id():
+        value += offer.player.loyalty
+    if offer.salary < offer.player.salary:
+        value -= offer.player.salary - offer.salary
+    return value
+
+
+def tie_break(offer):
+    value = 0
+
+    # Combo between salary and length
+    if offer.salary > (offer.player.attack + offer.player.defense):
+        value += offer.length
+    elif offer.salary < (offer.player.attack + offer.player.defense):
+        value += offer.length * (-1) + 4
+    else:
+        value += 2 if offer.length == 2 else 1
+
+    # Combo between age and length
+    if offer.player.age <= 21:
+        value += offer.length * (-1) + 4
+    elif offer.player.age >= 33:
+        value += offer.length
+    else:
+        value += 2 if offer.length == 2 else 1
+
+    return value
 
 
 class ContractOffers(basePreMatch, formPreMatch):
@@ -15,23 +46,28 @@ class ContractOffers(basePreMatch, formPreMatch):
         self.setupUi(self)
         self.parent_window = parent_window
         self.game = game
-        self.cnt = 0
-        self.update()
-        # self.btnConfirmSelection.clicked.connect(self.update_combobox)
-        # self.btnStartMatch.clicked.connect(self.start_match)
+        self.players = [player for player in self.game.players if player.contract_length == 0]
+        self.players.sort(key=lambda x: x.position.value)
+        self.league_cnt = 0
+        self.club_cnt = 0
+        self.current_club = self.game.leagues[self.league_cnt].standings[self.club_cnt]
+        self.current_offers = []
+        self.next_club()
+        self.btnConfirm.clicked.connect(self.confirm)
+        self.btnNext.clicked.connect(self.next)
 
-    def update(self):
-        self.lblClub.setText("Club: " + self.game.clubs[self.cnt].name)
-        player_cnt = len([player for player in self.game.clubs[self.cnt].players if player.contract_length > 0])
+    def next_club(self):
+        # Get current league and club
+        self.current_club = self.game.leagues[self.league_cnt].standings[self.club_cnt].team
+        self.lblClub.setText("Club: " + self.current_club.name)
+        player_cnt = len([player for player in self.current_club.players if player.contract_length > 0])
         self.lblPlayers.setText("Players: " + str(player_cnt))
-        self.lblBudget.setText("Budget: " + str(self.game.clubs[self.cnt].budget()))
+        self.lblBudget.setText("Budget: " + str(self.current_club.budget()))
         self.update_table()
 
     def update_table(self):
-        players = [player for player in self.game.players if player.contract_length == 0]
-        players.sort(key=lambda x: x.position.value)
-        self.tblPlayers.setRowCount(len(players))
-        for row, player in enumerate(players):
+        self.tblPlayers.setRowCount(len(self.players))
+        for row, player in enumerate(self.players):
             item_player_name = QTableWidgetItem(player.name)
             item_club_name = QTableWidgetItem(player.club.name if player.club is not None else "")
             is_selected = QTableWidgetItem("")
@@ -49,7 +85,7 @@ class ContractOffers(basePreMatch, formPreMatch):
             self.tblPlayers.setItem(row, 8, QTableWidgetItem(""))
             row += 1
 
-        if len(players) > 0:
+        if len(self.players) > 0:
             header = self.tblPlayers.horizontalHeader()
             header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
             header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
@@ -62,111 +98,119 @@ class ContractOffers(basePreMatch, formPreMatch):
             header.setSectionResizeMode(7, QtWidgets.QHeaderView.ResizeToContents)
             header.setSectionResizeMode(8, QtWidgets.QHeaderView.ResizeToContents)
 
+    def confirm(self):
+        self.current_offers = []
+        for row, player in enumerate(self.players):
+            if self.tblPlayers.item(row, 6).checkState():
+                if self.is_offer_valid(row, player):
+                    salary = int(self.tblPlayers.item(row, 7).text())
+                    contract_len = int(self.tblPlayers.item(row, 8).text())
+                    reputation = self.game.leagues[self.league_cnt].standings[self.club_cnt].points() / 3
+                    contract_offer = ContractOffer(player, self.current_club, reputation, salary,
+                                                   contract_len, self.game.week, Status.Pending)
+                    self.current_offers.append(contract_offer)
 
-    def update_combobox(self):
-        # Reset players that will attend match and clear comboboxes
-        if self.is_home_active:
-            self.match.home_players = []
-        else:
-            self.match.away_players = []
-        self.clear_all_comboboxes()
+    def next(self):
+        cost = sum([offer.salary for offer in self.current_offers])
+        cnt = len(self.current_offers)
 
-        # Loop through team players and add them to comboboxes and to the list of players that will attend the match
-        players = self.match.home.players if self.is_home_active else self.match.away.players
-        for row in range(self.tblPlayers.rowCount()):
-            for player in players:
-                if self.tblPlayers.item(row, 0).text() == player.name and self.tblPlayers.item(row, 5).checkState():
-                    if self.is_home_active:
-                        self.match.home_players.append(player)
-                    else:
-                        self.match.away_players.append(player)
-                    if player.position.value != 1:
-                        self.cbDefLw.addItem(player.name + " " + str(player.defense))
-                        self.cbDefLb.addItem(player.name + " " + str(player.defense))
-                        self.cbDefCb.addItem(player.name + " " + str(player.defense))
-                        self.cbDefP.addItem(player.name + " " + str(player.defense))
-                        self.cbDefRb.addItem(player.name + " " + str(player.defense))
-                        self.cbDefRw.addItem(player.name + " " + str(player.defense))
-                    if player.position.value == 1:
-                        self.cbAtkGk.addItem(player.name + " " + str(player.defense))
-                        self.cbDefGk.addItem(player.name + " " + str(player.defense))
-                    elif player.position.value == 2:
-                        self.cbAtkLw.addItem(player.name + " " + str(player.attack))
-                    elif player.position.value == 3:
-                        self.cbAtkLb.addItem(player.name + " " + str(player.attack))
-                    elif player.position.value == 4:
-                        self.cbAtkCb.addItem(player.name + " " + str(player.attack))
-                    elif player.position.value == 5:
-                        self.cbAtkP.addItem(player.name + " " + str(player.attack))
-                    elif player.position.value == 6:
-                        self.cbAtkRb.addItem(player.name + " " + str(player.attack))
-                    elif player.position.value == 7:
-                        self.cbAtkRw.addItem(player.name + " " + str(player.attack))
-                    break
-        self.set_default_values()
-
-    def clear_all_comboboxes(self):
-        self.cbAtkGk.clear()
-        self.cbAtkLw.clear()
-        self.cbAtkLb.clear()
-        self.cbAtkCb.clear()
-        self.cbAtkP.clear()
-        self.cbAtkRb.clear()
-        self.cbAtkRw.clear()
-        self.cbDefGk.clear()
-        self.cbDefLw.clear()
-        self.cbDefLb.clear()
-        self.cbDefCb.clear()
-        self.cbDefP.clear()
-        self.cbDefRb.clear()
-        self.cbDefRw.clear()
-
-    def set_default_values(self):
-        self.cbDefLw.setCurrentIndex(0)
-        self.cbDefLb.setCurrentIndex(2)
-        self.cbDefCb.setCurrentIndex(4)
-        self.cbDefP.setCurrentIndex(6)
-        self.cbDefRb.setCurrentIndex(8)
-        self.cbDefRw.setCurrentIndex(10)
-
-    def defense_combobox(self, players):
-        list1 = [player for player in players]
-        self.cbDefLw.addItems(list1)
-        list2 = [player for player in list1 if player != self.cbDefLw.currentText()]
-        self.cbDefLb.addItems(list2)
-        list3 = [player for player in list2 if player != self.cbDefLb.currentText()]
-        self.cbDefCb.addItems(list3)
-        list4 = [player for player in list3 if player != self.cbDefCb.currentText()]
-        self.cbDefP.addItems(list4)
-        list5 = [player for player in list4 if player != self.cbDefP.currentText()]
-        self.cbDefRb.addItems(list5)
-        list6 = [player for player in list5 if player != self.cbDefRb.currentText()]
-        self.cbDefRw.addItems(list6)
-        for i in range(5):
-            self.cbDefLw.removeItem(1)
-
-    def start_match(self):
-        # Check user selection
-        cnt = len(self.match.home_players) if self.is_home_active else len(self.match.away_players)
-        if cnt != 14:
-            error_dialog = QtWidgets.QMessageBox()
-            error_dialog.setWindowTitle("Warning")
-            if cnt > 14:
-                error_dialog.setText("You can't bring more than 14 players to the game!")
-            else:
-                error_dialog.setText("You can't bring less than 14 players to the game!")
-            error_dialog.exec_()
-            return
         qm = QtWidgets.QMessageBox
-        ans = qm.question(self, "Start Match", "Are you sure?", qm.Yes | qm.No)
+        message = "Club: " + self.current_club.name + "\nNumber of players: " + str(cnt) + "\nCost: " + str(cost)
+        ans = qm.question(self, "Are you sure?", message, qm.Yes | qm.No)
         if ans == qm.No:
             return
 
-        # Start Match if both players confirmed
-        if not self.is_home_active:
-            self.parent_window.child_window = gui.match.Match(self.parent_window, self.match)
-            self.parent_window.child_window.show()
+        for offer in self.current_offers:
+            self.game.contract_offers.append(offer)
 
-        # Next player
-        self.is_home_active = False
-        self.update()
+        self.club_cnt += 1
+        if self.club_cnt < len(self.current_club.league.teams):
+            self.next_club()
+        else:
+            self.league_cnt += 1
+            self.club_cnt = 0
+
+        if self.league_cnt >= 1 or self.club_cnt > 11:
+            self.finish_week()
+
+    def is_offer_valid(self, row, player):
+        error_dialog = QtWidgets.QMessageBox()
+        error_dialog.setWindowTitle("Warning")
+        try:
+            salary = int(self.tblPlayers.item(row, 7).text())
+            if salary < 1:
+                error_dialog.setText(player.name + " must have salary higher than 0")
+                error_dialog.exec_()
+                return False
+        except ValueError:
+            error_dialog.setText(player.name + " has invalid salary")
+            error_dialog.exec_()
+            return False
+        try:
+            contract_len = int(self.tblPlayers.item(row, 8).text())
+            if contract_len < 1 or contract_len > 3:
+                error_dialog.setText(player.name + " must have contract length between 1 and 3 years")
+                error_dialog.exec_()
+                return False
+        except ValueError:
+            error_dialog.setText(player.name + " has invalid contract length")
+            error_dialog.exec_()
+            return False
+        return True
+
+    def finish_week(self):
+        for main_offer in self.game.contract_offers:
+
+            # Check if offer salary is to low
+            diff = 1 if self.game.week < 34 else 2
+            if main_offer.player.position.value == 0:
+                diff -= 1
+            if (main_offer.player.attack + main_offer.player.defense - main_offer.salary) > diff:
+                main_offer.status = Status.Rejected
+
+            # Compare it with other offers
+            if main_offer.status == Status.Pending:
+                # Calculate main offer value
+                mo_value = get_offer_value(main_offer)
+
+                for other_offer in self.game.contract_offers:
+                    # Only if same player, different offer and other offer status is Pending
+                    if main_offer.player == other_offer.player and main_offer != other_offer \
+                            and other_offer.status == Status.Pending:
+
+                        # Calculate other offer value
+                        oo_value = get_offer_value(other_offer)
+
+                        # Direct comparison between two offers
+                        if mo_value > oo_value:
+                            other_offer.status = Status.Rejected
+
+                        elif mo_value == oo_value:
+                            mo_value += tie_break(main_offer)
+                            oo_value += tie_break(other_offer)
+                            if mo_value > oo_value:
+                                other_offer.status = Status.Rejected
+                            elif mo_value < oo_value:
+                                main_offer.status = Status.Rejected
+                            else:
+                                if main_offer.salary >= other_offer.salary:
+                                    other_offer.status = Status.Rejected
+                                else:
+                                    main_offer.status = Status.Rejected
+                        else:
+                            main_offer.status = Status.Rejected
+
+            # If no better offer in last 2 weeks accept it
+            if self.game.week - main_offer.week_offered >= 1 and main_offer.status == Status.Pending:
+                main_offer.status = Status.Accepted
+
+            print(main_offer)
+
+        # Update contract offers list
+        self.game.update_contract_offers_list()
+
+        # Return to main screen
+        self.parent_window.show()
+        self.parent_window.setup_window()
+        self.parent_window.btnNext.setText("Next Week")
+        self.parent_window.child_window = None

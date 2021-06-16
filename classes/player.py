@@ -38,26 +38,34 @@ class Player(Person):
             self.injury_length += 1
             inj = random.randint(1, 2)
 
-    def update_ratings(self, stats, minutes_acquired=442, games_acquired=10):
+    def update_ratings(self, stats, minutes_required=442, games_required=10):
         """
         :param stats: PlayerStatistics
-        :param minutes_acquired: 70% of a season (age: <24)
-        :param games_acquired: 50% of a season (age: 24-33)
+        :param minutes_required: 70% of a season (age: <24)
+        :param games_required: 50% of a season (age: 24-33)
         :return: null
         """
         attack_before = self.attack
         defense_before = self.defense
 
-        if self.position == Position.GK:
+        if self.age == 17:
+            if self.position != Position.GK:
+                self.attack += random.randint(0, 1)
+                print(self.name, "Attack before:", attack_before, "Attack now:", self.attack)
+            if not (self.attack == 3 or (self.position == Position.GK and self.defense == 2)):
+                self.defense += random.randint(0, 1)
+            print(self.name, "Defense before:", defense_before, "Defense now:", self.defense)
+
+        elif self.position == Position.GK:
             if self.age <= 35:
-                self.defense += self.check_mid(self.defense, stats.defense_rating, stats.defense_games, games_acquired)
+                self.defense += self.check_mid(self.defense, stats.defense_rating, stats.defense_games, games_required)
             else:
-                if self.check_over33(self.defense, stats.defense_rating, stats.defense_games, games_acquired):
+                if self.check_over33(self.defense, stats.defense_rating, stats.defense_games, games_required):
                     self.defense -= 1
             print(self.name, "Defense before:", defense_before, "Defense now:", self.defense)
 
         elif self.age < 24:
-            if self.check_under24(self.attack, stats.attack_rating, stats.attack_minutes, minutes_acquired):
+            if self.check_under24(self.attack, stats.attack_rating, stats.attack_minutes, minutes_required):
                 self.attack += 1
             print(self.name, "Attack before:", attack_before, "Attack now:", self.attack)
 
@@ -65,31 +73,31 @@ class Player(Person):
                 print(self.name, "Defense before:", defense_before, "Defense now:",  self.defense)
                 return
 
-            if self.check_under24(self.defense, stats.defense_rating, stats.defense_minutes, minutes_acquired):
+            if self.check_under24(self.defense, stats.defense_rating, stats.defense_minutes, minutes_required):
                 self.defense += 1
             print(self.name, "Defense before:", defense_before, "Defense now:",  self.defense)
 
         elif 24 <= self.age <= 33:
-            self.attack += self.check_mid(self.attack, stats.attack_rating, stats.attack_games, games_acquired)
-            self.defense += self.check_mid(self.defense, stats.defense_rating, stats.defense_games, games_acquired)
+            self.attack += self.check_mid(self.attack, stats.attack_rating, stats.attack_games, games_required)
+            self.defense += self.check_mid(self.defense, stats.defense_rating, stats.defense_games, games_required)
             print(self.name, "Attack before:", attack_before, "Attack now:", self.attack)
             print(self.name, "Defense before:", defense_before, "Defense now:", self.defense)
 
         elif self.age > 33:
-            if self.check_over33(self.attack, stats.attack_rating, stats.attack_games, games_acquired):
+            if self.check_over33(self.attack, stats.attack_rating, stats.attack_games, games_required):
                 self.attack -= 1
             print(self.name, "Attack before:", attack_before, "Attack now:", self.attack)
 
-            if self.check_over33(self.defense, stats.defense_rating, stats.defense_games, games_acquired):
+            if self.check_over33(self.defense, stats.defense_rating, stats.defense_games, games_required):
                 self.defense -= 1
             print(self.name, "Defense before:", defense_before, "Defense now:", self.defense)
 
-    def check_under24(self, player_current_rating, player_rating, player_minutes, minutes_acquired):
+    def check_under24(self, player_current_rating, player_rating, player_minutes, minutes_required):
         if player_rating == 5:
             return False
 
         # Scale minutes to stats.attack_minutes >= 442 equals 1
-        minutes = 1 if player_minutes >= minutes_acquired else player_minutes / minutes_acquired
+        minutes = 1 if player_minutes >= minutes_required else player_minutes / minutes_required
         age = 1 if self.age < 21 else 0.5
         rating = player_rating - player_current_rating + 1
 
@@ -101,8 +109,8 @@ class Player(Person):
         else:
             return False
 
-    def check_mid(self, player_current_rating, player_rating, player_games, games_acquired):
-        if player_games >= games_acquired:
+    def check_mid(self, player_current_rating, player_rating, player_games, games_required):
+        if player_games >= games_required:
             if player_rating >= player_current_rating:
                 chance_up = 100 - round(player_rating - player_current_rating * 100)
                 chance_down = 0
@@ -127,11 +135,11 @@ class Player(Person):
         else:
             return 0
 
-    def check_over33(self, player_current_rating, player_rating, player_games, games_acquired):
+    def check_over33(self, player_current_rating, player_rating, player_games, games_required):
         if player_rating == 1:
             return False
 
-        if player_games >= games_acquired:
+        if player_games >= games_required:
             chance_down = round(player_current_rating + 1 - player_rating * 100)
         else:
             chance_down = 120

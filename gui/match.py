@@ -94,7 +94,7 @@ class Match(baseMatch, formMatch):
         player_names_h_def = return_player_names(self.home_def)
         player_names_a_atk = return_player_names(self.away_atk)
         player_names_a_def = return_player_names(self.away_def)
-        self.match.start_match(player_names_h_atk, player_names_h_def, player_names_a_atk, player_names_a_def)
+        self.match.confirm(player_names_h_atk, player_names_h_def, player_names_a_atk, player_names_a_def)
 
         update_table(self.tblPlayerStatsHome, self.match.home_players)
         update_table(self.tblPlayerStatsAway, self.match.away_players)

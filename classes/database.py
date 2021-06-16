@@ -187,6 +187,10 @@ class Database:
             # Update table match
             self.update_match(league)
 
+        # Update table contract_offer
+        for offer in game.contract_offers:
+            self.insert_contract_offer(offer)
+
         self.commit()
         self.close_connection()
         logging.debug("Database.save_game() Executed")
@@ -212,19 +216,16 @@ class Database:
 
     def insert_player(self, player):
         logging.debug("Database.insert_player()")
-        self.cursor.execute("INSERT INTO person"
-                            " SET name='" + player.name +
-                            "', age=" + str(player.age) +
-                            ", loyalty=" + str(player.loyalty) +
-                            ", country_id=" + str(player.country.get_id()) +
-                            ", club_id=" + str(player.team.get_id()) +
-                            ", contract_length=" + str(player.contract_length) +
-                            ", salary=" + str(player.salary))
-        self.cursor.execute("INSERT INTO player"
-                            " SET position_id=" + str(player.position.value) +
-                            ", attack=" + str(player.attack) +
-                            ", defense=" + str(player.defense) +
-                            ", injury_length=" + str(player.injury_length))
+        club = player.club.get_id() if player.club is not None else None
+        self.cursor.execute("INSERT INTO person" +
+                            " (id, name, age, loyalty, country_id, club_id, contract_length, salary)" +
+                            " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                            (player.get_id(), player.name, player.age, player.loyalty, player.country.get_id(), club,
+                             player.contract_length, player.salary))
+        self.cursor.execute("INSERT INTO player" +
+                            " (person_id, position_id, attack, defense, injury_length)" +
+                            " VALUES(?, ?, ?, ?, ?)",
+                            (player.get_id(), player.position.value, player.attack, player.defense, player.injury_length))
         logging.debug("Database.insert_player() Executed")
 
     def update_player(self, player):
@@ -275,7 +276,7 @@ class Database:
 
     def update_player_statistics(self, player_sc, game):
         logging.debug("Database.update_player_statistics()")
-        self.cursor.execute("UPDATE player_statistics"
+        self.cursor.execute("UPDATE player_statistics" +
                             " SET games=" + str(player_sc.games) +
                             ", attack_games=" + str(player_sc.attack_games) +
                             ", attack_rating=" + str(player_sc.attack_rating) +
@@ -302,7 +303,7 @@ class Database:
     def update_match(self, league):
         logging.debug("Database.update_match()")
         for match in league.schedule:
-            self.cursor.execute("UPDATE match"
+            self.cursor.execute("UPDATE match" +
                                 " SET time=" + str(match.time) + ", home_goals=" + str(match.home_goals) +
                                 ", away_goals=" + str(match.away_goals) +
                                 " WHERE competition_id = " + str(league.get_id()) +
@@ -310,6 +311,15 @@ class Database:
                                 " AND home_id = " + str(match.home.get_id()) +
                                 " AND away_id = " + str(match.away.get_id()))
         logging.debug("Database.update_match() Executed")
+
+    def insert_contract_offer(self, offer):
+        logging.debug("Database.insert_contract_offer()")
+        self.cursor.execute("INSERT INTO contract_offer" +
+                            " (player_id, club_id, club_reputation, salary, length, week_offered)" +
+                            " VALUES (?, ?, ?, ?, ?, ?)",
+                            (offer.player.get_id(), offer.club.get_id(), offer.club_reputation, offer.salary,
+                             offer.length, offer.week_offered))
+        logging.debug("Database.insert_contract_offer() Executed")
 
     def load_schedule(self, game):
         logging.debug("Database.load_schedule()")

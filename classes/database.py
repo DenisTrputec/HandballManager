@@ -103,11 +103,11 @@ class Database:
         self.cursor.execute("SELECT * FROM team_statistics")
         tuple_list = self.cursor.fetchall()
         for t in tuple_list:
-            if game.season == t[2]:
+            if game.season == t[0]:
                 for league in game.leagues:
-                    if league.get_id() == t[1]:
+                    if league.get_id() == t[2]:
                         for club in game.clubs:
-                            if club.get_id() == t[0]:
+                            if club.get_id() == t[1]:
                                 league.standings.append(TeamStatistics(club, league, t[3], t[4], t[5], t[6], t[7]))
 
         self.cursor.execute("SELECT * FROM player_statistics")
@@ -156,6 +156,11 @@ class Database:
         # Update table club
         self.update_club(game)
 
+        # Delete retired player
+        for player in game.retired_players:
+            self.delete_player(player)
+        game.retired_players = []
+
         # Update tables person and player
         self.cursor.execute("SELECT * FROM v_player")
         tuple_list = self.cursor.fetchall()
@@ -173,7 +178,7 @@ class Database:
             
             # Update table player_statistics part 1
             logging.info("SELECT * FROM player_statistics")
-            self.cursor.execute("SELECT * FROM player_statistics")
+            self.cursor.execute("SELECT * FROM player_statistics WHERE season=" + str(game.season))
             tuple_list = self.cursor.fetchall()
             player_s_database = [t[0] for t in tuple_list]
 
@@ -181,7 +186,7 @@ class Database:
             logging.info("SELECT * FROM team_statistics")
             self.cursor.execute("SELECT * FROM team_statistics")
             tuple_list = self.cursor.fetchall()
-            team_s_database = [t[0] for t in tuple_list]
+            team_s_database = [t[1] for t in tuple_list]
 
             # Update table match part 1
             logging.info("SELECT * FROM match")
@@ -264,12 +269,19 @@ class Database:
                             (player.attack, player.defense, player.injury_length, player.get_id()))
         logging.debug("Database.update_player() Executed")
 
+    def delete_player(self, player):
+        logging.debug("Database.delete_player()")
+        self.cursor.execute("DELETE FROM player WHERE person_id = " + str(player.get_id()))
+        self.cursor.execute("DELETE FROM person WHERE id = " + str(player.get_id()))
+        logging.debug("Database.delete_player() Executed")
+
     def insert_team_statistics(self, team_s, game_season):
         logging.debug("Database.insert_team_statistics()")
+        print(team_s)
         self.cursor.execute("INSERT INTO team_statistics" +
-                            " (team_id, competition_id, season, won, drawn, lost, goals_for, goals_away)" +
+                            " (season, team_id, competition_id, won, drawn, lost, goals_for, goals_away)" +
                             " VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                            (team_s.team.get_id(), team_s.league.get_id(), game_season, team_s.won,
+                            (game_season, team_s.team.get_id(), team_s.league.get_id(), team_s.won,
                              team_s.drawn, team_s.lost, team_s.goals_for, team_s.goals_away))
         logging.debug("Database.insert_team_statistics() Executed")
 

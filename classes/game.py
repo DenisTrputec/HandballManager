@@ -4,6 +4,7 @@ from classes.database import Database
 from classes.player import Player
 from classes.player import Position
 from classes.contract_offer import Status
+from classes.player_statistics_competition import PlayerStatisticsCompetition
 
 
 class Game:
@@ -15,6 +16,7 @@ class Game:
         self.leagues = []
         self.clubs = []
         self.players = []
+        self.retired_players = []
         self.schedule = []
         self.calendar = []
         self.contract_offers = []
@@ -33,6 +35,30 @@ class Game:
         self.name = save_name
         db = Database(save_name)
         db.load_game(self)
+
+    def new_season(self):
+        self.update_players_attributes()
+        self.retire_players()
+        self.season += 1
+        self.week = 1
+
+        for league in self.leagues:
+            league.next_season()
+            for match in league.schedule:
+                self.schedule.append(match)
+
+        for club in self.clubs:
+            club.players = []
+
+        for player in self.players:
+            player.age += 1
+            if player.club is not None:
+                for club in self.clubs:
+                    if player.club.get_id() == club.get_id():
+                        club.players.append(player)
+
+        for club in self.clubs:
+            club.money -= sum([player.salary for player in club.players])
 
     def decrease_contract_lengths(self):
         for player in self.players:
@@ -92,3 +118,30 @@ class Game:
                 offer.player.contract_length = offer.length
 
         self.contract_offers = [offer for offer in self.contract_offers if offer.status == Status.Pending]
+
+    def update_players_attributes(self):
+        players_sc = []
+        for league in self.leagues:
+            for player_sc in league.players_sc:
+                players_sc.append(player_sc)
+
+        for player in self.players:
+            for player_sc in players_sc:
+                if player_sc.player.get_id() == player.get_id():
+                    player.update_attributes(player_sc)
+                    break
+            else:
+                player.update_attributes(PlayerStatisticsCompetition(player, player.club.league))
+
+    def retire_players(self):
+        for player in self.players:
+            if player.contract_length == 0:
+                player.club = None
+                player.salary = 0
+                player.injury_length = 0
+
+        self.retired_players = [player for player in self.players if player.club is None and player.age >= 34]
+        for player in self.retired_players:
+            print(player)
+
+        self.players = [player for player in self.players if player not in self.retired_players]

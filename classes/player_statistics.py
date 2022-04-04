@@ -12,3 +12,9 @@ class PlayerStatistics:
     def __str__(self):
         return f"Player: {self.player.name}, Games: {self.games}, AtkRat:{self.attack_rating}, " \
                f"AtkMin:{self.attack_minutes}, DefRat:{self.defense_rating}, DefMin:{self.defense_minutes}"
+
+    def atk_avg(self):
+        return self.attack_rating / self.attack_games if self.attack_games > 0 else 0
+
+    def def_avg(self):
+        return self.defense_rating / self.defense_games if self.defense_games > 0 else 0

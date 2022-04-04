@@ -192,6 +192,10 @@ class MainScreen(baseMainScreen, formMainScreen):
                 self.game.decrease_contract_lengths()
                 self.game.create_new_players()
             self.contract_offers()
+        elif self.btnNext.text() == "Next Season":
+            self.game.new_season()
+            self.update_injuries()
+            self.setup_window()
 
     def next_match(self):
         self.game.schedule.sort(key=lambda x: [x.round, x.competition.get_id()])
@@ -218,6 +222,8 @@ class MainScreen(baseMainScreen, formMainScreen):
             self.btnNext.setText("Next Week")
         else:
             self.btnNext.setText("Next Match")
+        if self.game.week == 39:
+            self.btnNext.setText("Next Season")
 
     def update_injuries(self):
         self.child_window = InjuryUpdate(self, self.game)

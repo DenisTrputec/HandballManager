@@ -1,5 +1,6 @@
 from classes.competition import Competition
 from classes.match import Match
+from classes.team_statistics import TeamStatistics
 import random
 
 
@@ -66,3 +67,18 @@ class League(Competition):
         for team_s, money in zip(self.standings, prize_money):
             team_s.team.money += money
             print(f"{team_s.team.name}: {money} {team_s.team.money}")
+
+    def next_season(self):
+        self.players_sc = []
+
+        self.teams = []
+        for team_sc in self.standings:
+            self.teams.append(team_sc.team)
+
+        self.standings = []
+        for team in self.teams:
+            self.standings.append(TeamStatistics(team, self))
+
+        self.schedule = []
+        self.create_schedule()
+

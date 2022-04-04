@@ -130,7 +130,7 @@ class ContractOffers(basePreMatch, formPreMatch):
             self.league_cnt += 1
             self.club_cnt = 0
 
-        if self.league_cnt >= 1 or self.club_cnt > 11:
+        if self.league_cnt >= 1 or self.club_cnt > 11 or self.game.week == 38:
             self.finish_week()
 
     def is_offer_valid(self, row, player):
